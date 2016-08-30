@@ -1,8 +1,0 @@
-pip==8.1.2
-bumpversion==0.5.3
-wheel==0.29.0
-
-git+https://github.com/bigchaindb/bigchaindb.git
-git+https://github.com/bigchaindb/pycoalaip.git@init-creation-api#egg=coalaip-0.0.2
-
--e . --process-dependency-links
