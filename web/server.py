@@ -10,7 +10,7 @@ from flask import Flask
 import gunicorn.app.base
 
 from web.views.user import user_views
-# from web.views.manifestation import manifestation_views
+from web.views.manifestation import manifestation_views
 
 
 class StandaloneApplication(gunicorn.app.base.BaseApplication):
@@ -58,7 +58,7 @@ def create_app(settings):
     app.debug = settings.get('debug', False)
 
     app.register_blueprint(user_views, url_prefix='/api/v1')
-    # app.register_blueprint(manifestation_views, url_prefix='/api/v1')
+    app.register_blueprint(manifestation_views, url_prefix='/api/v1')
     return app
 
 
