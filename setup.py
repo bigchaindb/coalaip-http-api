@@ -18,6 +18,7 @@ tests_require = [
     'pytest>=3.0.1',
     'pytest-cov',
     'pytest-mock',
+    'pytest_flask',
 ]
 
 dev_require = [

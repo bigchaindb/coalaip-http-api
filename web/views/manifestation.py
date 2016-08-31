@@ -18,7 +18,7 @@ class ManifestationApi(Resource):
     def post(self):
         plugin = Plugin('http://localhost:9984')
         coala_ip = CoalaIp(plugin)
-        return None
+        return {'hello': 'world'}
 
 
 manifestation_api.add_resource(ManifestationApi, '/manifestations', strict_slashes=False)
