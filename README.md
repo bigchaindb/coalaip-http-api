@@ -26,7 +26,7 @@ currently.
 ## Can I use this in production?
 
 No. Currently we're hitting against a BigchainDB instance running in
-quasi "regtest" mode. It's never been used in production either.
+quasi "regtest" mode. Its never been used in production either.
 In its current state, this package can and should be used to experiment with
 COALA IP.
 
@@ -41,7 +41,7 @@ COALA IP.
 ## Should I expose this server to the internet?
 
 NO! Think of this library more like a shell-command. The flask server should at
-least be run behind a reverse-proxy like nginx, so that it's interface is NOT
+least be run behind a reverse-proxy like nginx, so that its interface is NOT
 exposed to the world wide web.
 
 
