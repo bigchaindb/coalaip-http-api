@@ -152,9 +152,11 @@ RETURNS:
 
 #### Why is `@id` currently empty?
 
-We're planning to replace JSON-LD's URI linking structure with
-[IPLD](https://github.com/ipld/specs). As it's not fully implemented in
-BigchainDB yet, `@id` is empty for now.
+An empty `@id` resolves the entity's URI to be the current document base (i.e.
+URL). While this is not particularly true, as requesting the creation
+transaction of an entity results in much more than just the entity, this is the
+implementation for now. In the future, we're planning to replace JSON-LD's URI
+linking structure with [IPLD](https://github.com/ipld/specs).
 
 
 #### Was my POST to `/manifestations/` successful?
