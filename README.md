@@ -167,8 +167,10 @@ To check if your POST was successful, try validating by doing the following:
 or
 
 [@Sohkai plz change PORT if necessary]
+
 1. Open your browser and go to `http://localhost:9984/api/v1` (your locally
    running BigchainDB instance)
+
 2. To check if your previously created models were included in BigchainDB, take
    the string in `manifestationOfWork` or `rightsOf` and append it to the
    following link: `http://localhost:9984/api/v1/transactions/<string goes here>`.
