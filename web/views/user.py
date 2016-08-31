@@ -19,7 +19,7 @@ class UserApi(Resource):
             A dict containing the verifying_key and signing_key.
         """
         # TODO FOR COALA IP: Return CamelCase key names
-        user = coalaip.generate_user()._asdict()
+        user = coalaip.generate_user()
         # TODO: We might want to have a generic function for this at one point.
         user['verifyingKey'] = user.pop('verifying_key')
         user['signingKey'] = user.pop('signing_key')

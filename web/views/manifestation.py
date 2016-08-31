@@ -1,6 +1,3 @@
-# TODO: remove this
-from collections import namedtuple
-
 from flask import request, Blueprint
 from flask_restful import Resource, Api
 
@@ -20,11 +17,9 @@ class ManifestationApi(Resource):
         manifestation = data['manifestation']
         work = data['work']
 
-        # TODO FOR COALA IP: `register_manifestation` should accept a dict and
-        #                    not only a named tuple
         user = data['user']
-        User = namedtuple('User', 'verifying_key signing_key')
-        user = User(user.pop('verifyingKey'), user.pop('signingKey'))
+        user['verifying_key'] = user.pop('verifyingKey')
+        user['signing_key'] = user.pop('signingKey')
 
         copyright, manifestation, work = coalaip.register_manifestation(
             manifestation_data=manifestation,
