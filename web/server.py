@@ -3,11 +3,13 @@
 The application is implemented in Flask and runs using Gunicorn.
 """
 
+import os
 import copy
 import multiprocessing
 
-from flask import Flask
 import gunicorn.app.base
+
+from flask import Flask
 
 from web.views.user import user_views
 from web.views.manifestation import manifestation_views
@@ -87,9 +89,19 @@ def create_server(settings):
 
 
 if __name__ == '__main__':
+    # Double check in case the environment variable is sent via Docker,
+    # which will send empty strings for missing environment variables
+    hostname = os.environ.get('API_HOST', None)
+    if not hostname:
+        hostname = 'localhost'
+
+    port = os.environ.get('API_PORT', None)
+    if not port:
+        port = '3000'
+
     # start the web api
     settings = {
-        'bind': '{}:{}'.format('127.0.0.1', '9985'),
+        'bind': '{hostname}:{port}'.format(hostname=hostname, port=port),
         'workers': 1,
         'threads': 1
     }

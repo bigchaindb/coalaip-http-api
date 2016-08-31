@@ -3,9 +3,10 @@ from flask_restful import Resource, Api
 
 from coalaip import CoalaIp
 from coalaip_bigchaindb import Plugin
+from web.utils import get_bigchaindb_api_url
 
 
-coalaip = CoalaIp(Plugin('http://localhost:9984/'))
+coalaip = CoalaIp(Plugin(get_bigchaindb_api_url()))
 
 user_views = Blueprint('user_views', __name__)
 user_api = Api(user_views)

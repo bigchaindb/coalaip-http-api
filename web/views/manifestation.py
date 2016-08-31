@@ -1,11 +1,12 @@
 from flask import request, Blueprint
 from flask_restful import Resource, Api
 
-from coalaip_bigchaindb.plugin import Plugin
 from coalaip import CoalaIp
+from coalaip_bigchaindb.plugin import Plugin
+from web.utils import get_bigchaindb_api_url
 
 
-coalaip = CoalaIp(Plugin('http://localhost:9984/api/v1'))
+coalaip = CoalaIp(Plugin(get_bigchaindb_api_url()))
 
 manifestation_views = Blueprint('manifestation_views', __name__)
 manifestation_api = Api(manifestation_views)
