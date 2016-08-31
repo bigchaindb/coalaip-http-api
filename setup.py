@@ -13,10 +13,8 @@ install_requires = [
 
 tests_require = [
     'tox>=2.3.1',
-    'coverage>=4.1',
     'flake8>=2.6.0',
     'pytest>=3.0.1',
-    'pytest-cov',
     'pytest-mock',
     'pytest_flask',
 ]
