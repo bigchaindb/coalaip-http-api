@@ -25,7 +25,7 @@ currently.
 
 ## Can I use this in production?
 
-Of course not. Currently we're hitting against a BigchainDB instance running in
+No. Currently we're hitting against a BigchainDB instance running in
 quasi "regtest" mode. It's never been used in production either.
 In its current state, this package can and should be used to experiment with
 COALA IP.
@@ -36,6 +36,18 @@ COALA IP.
 1. Read the installation section on how to install with Docker.
 2. Get familiar with the REST API provided at the end of this document.
 3. Hit against a running docker container with a HTTP client of your choice.
+
+
+## Should I expose this server to the internet?
+
+NO! Think of this library more like a shell-command. The flask server should at
+least be run behind a reverse-proxy like nginx, so that it's interface is NOT
+exposed to the world wide web.
+
+
+## Can I just have a shell-command for this?
+
+Yes, [curl](https://curl.haxx.se/).
 
 
 ## Installation
@@ -66,7 +78,12 @@ Use Docker.
 
 ## REST API
 
-## Create Users
+
+### Create Users
+
+This call will not store any data on the running instance of BigchainDB.
+It simply generates a verifying and signing key-pair that can be used in a
+POST-manifestation call.
 
 ```
 POST /users/
@@ -81,7 +98,13 @@ RETURNS:
 }
 ```
 
-## Register a Manifestation
+
+### Register a Manifestation
+
+In order to register the manifestation on BigchainDB as transactions on a
+specific user's name, `verifyingKey` and `signingKey` need to be provided here.
+The attributes shown for `manifestation` and `work` can be much more diverse,
+for this see the COALA IP models definition (not yet publicly available yet).
 
 ```
 POST /manifestation/
@@ -110,20 +133,44 @@ RETURNS:
     "work": {
         "@id": "<currently empty>",
         "name": "The Lord of the Rings Trilogy",
-        "author": "<URI pointing to a Person or Organization object>",
+        "author": "J. R. R. Tolkien",
     },
     "manifestation": {
         "@id": "<currently empty>",
         "name": "The Fellowship of the Ring",
-        "isPartOf": "<URI pointing to the registered Work's transaction ../<txid>",
+        "manifestationOfWork": "<URI pointing to the Work's transaction ../<txid>",
         "datePublished": "29-07-1954",
         "url": "<URI pointing to a media blob>",
         "isManifestation": true,
     },
     "copyright": {
         "@id": "<currently empty>",
-        "rightsOf": "<Relative URI pointing to the registered Manifestation ../<txid>",
+        "rightsOf": "<Relative URI pointing to the Manifestation ../<txid>",
     },
 }
 ```
 
+#### Why is `@id` currently empty?
+
+We're planning to replace JSON-LD's URI linking structure with
+[IPLD](https://github.com/ipld/specs). As it's not fully implemented in
+BigchainDB yet, `@id` is empty for now.
+
+
+#### Was my POST to `/manifestations/` successful?
+
+To check if your POST was successful, try validating by doing the following:
+
+1. Check the response of your POST request: Is the return value similar to the
+   example provided above?
+
+or
+
+[@Sohkai plz change PORT if necessary]
+1. Open your browser and go to `http://localhost:9984/api/v1` (your locally
+   running BigchainDB instance)
+2. To check if your previously created models were included in BigchainDB, take
+   the string in `manifestationOfWork` or `rightsOf` and append it to the
+   following link: `http://localhost:9984/api/v1/transactions/<string goes here>`.
+   BigchainDB should then answer with the transaction, the model was registerd
+   in.
