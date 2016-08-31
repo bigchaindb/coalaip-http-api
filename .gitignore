@@ -28,6 +28,9 @@ var/
 .installed.cfg
 *.egg
 
+# RethinkDB
+rethinkdb_data
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
