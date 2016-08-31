@@ -1,15 +1,8 @@
-"""This module provides the blueprint for some basic API endpoints.
-
-For more information please refer to the documentation on ReadTheDocs:
- - https://bigchaindb.readthedocs.io/en/latest/drivers-clients/http-client-server-api.html
-"""
-from flask import current_app, Blueprint
+from flask import Blueprint
 from flask_restful import Resource, Api
 
 from coalaip import CoalaIp
 from coalaip_bigchaindb import Plugin
-
-from web.views.base import make_error
 
 
 coalaip = CoalaIp(Plugin('http://localhost:9984/'))
@@ -25,7 +18,12 @@ class UserApi(Resource):
         Return:
             A dict containing the verifying_key and signing_key.
         """
-        return coalaip.generate_user()._asdict()
+        # TODO FOR COALA IP: Return CamelCase key names
+        user = coalaip.generate_user()._asdict()
+        # TODO: We might want to have a generic function for this at one point.
+        user['verifyingKey'] = user.pop('verifying_key')
+        user['signingKey'] = user.pop('signing_key')
+        return user
 
 
 user_api.add_resource(UserApi, '/users', strict_slashes=False)
