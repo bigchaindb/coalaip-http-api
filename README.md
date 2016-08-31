@@ -35,7 +35,7 @@ COALA IP.
 
 1. Read the installation section on how to install with Docker.
 2. Get familiar with the REST API provided at the end of this document.
-3. Hit against a running docker container with a HTTP client of your choice.
+3. Hit against a running Docker container with a HTTP client of your choice.
 
 
 ## Should I expose this server to the internet?
@@ -50,30 +50,82 @@ exposed to the world wide web.
 Yes, [curl](https://curl.haxx.se/).
 
 
-## Installation
+## Installation and Usage
 
 
-### For development
+### For development on Linux
 
 ```
 $ git clone git@github.com:bigchaindb/coalaip-http-api.git
 $ virtualenv --python=python3 venv
 $ source venv/bin/activate
-$ pip install -e .\[dev\] --process-dependency-links
+$ pip install -r requirements_dev.txt
 $ python web/server.py
 ```
 
-### For integration
+### For integration (or for non-Linux development)
 
 Use Docker.
 
 
-#### How to install Docker?
-[@Sohkai plz add]
+#### Installing Docker
 
+You'll need to have at least the base [Docker](https://docs.docker.com/engine/installation/)
+and [Docker Compose](https://docs.docker.com/compose/install/) installed, but
+on some platforms (i.e. OSX and Windows), [Docker Machine](https://docs.docker.com/machine/install-machine/).
+will also be necessary. As a quick primer, it may be interesting to go through
+the guide to [run BigchainDB via Docker](http://bigchaindb-examples.readthedocs.io/en/latest/install.html#the-docker-way),
+but we've already set up everything for you in this repo.
 
-#### How to install and run COALA IP HTTP Wrapper with Docker
-[@Sohkai plz add]
+If you already have Docker installed, just make sure you have a recent version:
+
+```bash
+$ docker --version
+Docker version 1.11.1, build 5604cbe
+
+$ docker-compose --version
+docker-compose version 1.7.0, build 0d7bf73
+```
+
+#### Running with Docker
+
+Using the provided [docker-compose.yml](./docker-compose.yml), you can install
+and start RethinkDB, BigchainDB, and the COALA IP HTTP server with just a
+few commands.
+
+First, copy the default environment settings and build the Docker containers:
+
+```bash
+$ cp .env_template .env
+$ docker-compose build
+```
+
+And then start the services:
+
+```bash
+# In one terminal
+# Note that BigchainDB must be started after RethinkDB has begun accepting connections (may take a few seconds)
+$ docker-compose up -d rethinkdb
+$ docker-compose up bigchaindb
+
+# In another terminal
+$ docker-compose up api
+```
+
+By default, the COALA IP HTTP server will now be available through
+`http://localhost:3000/api/v1/`, along with the BigchainDB API
+(`http://localhost:32768/api/v1/`) and the RethinkDB admin panel
+(`http://localhost:58585`).
+
+**Note**: If you are running Docker through Docker Machine, the services will
+only be available through the hostname of your Docker Machine instance. Use
+`docker-machine ip <machine-name>` to get this hostname, and use it to replace
+the `localhost` part of the above URLs.
+
+### Settings
+
+The API server can be configured with a number of environment variables [see
+.env_template](./.env_template).
 
 
 ## REST API
@@ -168,8 +220,6 @@ To check if your POST was successful, try validating by doing the following:
 
 or
 
-[@Sohkai plz change PORT if necessary]
-
 1. Open your browser and go to `http://localhost:9984/api/v1` (your locally
    running BigchainDB instance)
 
@@ -178,3 +228,7 @@ or
    following link: `http://localhost:9984/api/v1/transactions/<string goes here>`.
    BigchainDB should then answer with the transaction, the model was registerd
    in.
+
+**Note**: If running on Docker and/or Docker Machine, substitute the hostnames
+and ports of the above URLs with your Docker settings, as necessary (see the
+[running with Docker section](#how-to-run-with-docker) for more help).
