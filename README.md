@@ -55,6 +55,11 @@ Yes, [curl](https://curl.haxx.se/).
 
 ### For development on Linux
 
+1. You'll have to [install, configure and run BigchainDB as well as
+RethinkDB](https://bigchaindb.readthedocs.io/en/latest/quickstart.html).
+
+2. Install and run this library using the following commands:
+
 ```
 $ git clone git@github.com:bigchaindb/coalaip-http-api.git
 $ virtualenv --python=python3 venv
@@ -63,9 +68,10 @@ $ pip install -r requirements_dev.txt
 $ python web/server.py
 ```
 
+
 ### For integration (or for non-Linux development)
 
-Use Docker.
+Use Docker :whale:.
 
 
 #### Installing Docker
@@ -221,13 +227,13 @@ To check if your POST was successful, try validating by doing the following:
 or
 
 1. Open your browser and go to `http://localhost:9984/api/v1` (your locally
-   running BigchainDB instance)
+   running BigchainDB instance - if using Docker, use port `32768`).
 
 2. To check if your previously created models were included in BigchainDB, take
    the string in `manifestationOfWork` or `rightsOf` and append it to the
    following link: `http://localhost:9984/api/v1/transactions/<string goes here>`.
    BigchainDB should then answer with the transaction, the model was registerd
-   in.
+   in (if using Docker, use port `32768`).
 
 **Note**: If running on Docker and/or Docker Machine, substitute the hostnames
 and ports of the above URLs with your Docker settings, as necessary (see the
