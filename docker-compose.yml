@@ -17,7 +17,7 @@ services:
       BDB_NODE_HOST: bigchaindb
       BDB_NODE_PORT: 9984
     ports:
-      - "3000:3000"
+      - "${API_PORT}:3000"
     command: python web/server.py
   rethinkdb:
     image: rethinkdb
