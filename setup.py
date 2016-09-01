@@ -4,17 +4,19 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'coalaip>=0.0.2',
-    'bigchaindb>=0.5.1'
+    'coalaip>=0.0.1.dev2',
+    'coalaip-bigchaindb>=0.0.1.dev2',
+    'flask>=0.11.1',
+    'flask-restful>=0.3.5',
+    'gunicorn>=19.6.0'
 ]
 
 tests_require = [
     'tox>=2.3.1',
-    'coverage>=4.1',
     'flake8>=2.6.0',
     'pytest>=3.0.1',
-    'pytest-cov',
     'pytest-mock',
+    'pytest_flask',
 ]
 
 dev_require = [
@@ -27,10 +29,6 @@ docs_require = [
     'sphinx-autobuild',
     'sphinxcontrib-napoleon>=0.4.4',
     'sphinx_rtd_theme',
-]
-
-dependency_links = [
-    'git+https://github.com/bigchaindb/pycoalaip.git@init-creation-api#egg=coalaip-0.0.2',
 ]
 
 setup(
@@ -62,5 +60,4 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    dependency_links=dependency_links,
 )

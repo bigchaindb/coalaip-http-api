@@ -1,0 +1,39 @@
+version: '2'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./compose/api/Dockerfile
+    volumes:
+      - ./docs:/usr/src/app/docs
+      - ./tests:/usr/src/app/tests
+      - ./web:/usr/src/app/web
+      - ./setup.py:/usr/src/app/setup.py
+    env_file:
+      - .env
+    environment:
+      API_HOST: api
+      BDB_NODE_HOST: bigchaindb
+      BDB_NODE_PORT: 9984
+    ports:
+      - "${API_PORT}:3000"
+    command: python web/server.py
+  rethinkdb:
+    image: rethinkdb
+    env_file:
+      - .env
+    ports:
+      - "${RETHINKDB_ADMIN_PORT}:8080"
+      - "28015"
+  bigchaindb:
+    build: ./compose/bigchaindb
+    env_file:
+      - .env
+    environment:
+      BIGCHAINDB_DATABASE_HOST: rethinkdb
+      BIGCHAINDB_API_ENDPOINT: http://server:9984/api/v1
+      BIGCHAINDB_SERVER_BIND: 0.0.0.0:9984
+    ports:
+      - "${BIGCHAINDB_API_PORT}:9984"
+    command: bigchaindb start
