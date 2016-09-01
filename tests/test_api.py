@@ -5,6 +5,7 @@ from flask import url_for
 
 def test_create_user(client):
     resp = client.post(url_for('user_views.userapi'))
+    assert resp.status_code == 200
     assert resp.json['verifyingKey']
     assert resp.json['signingKey']
 
@@ -48,12 +49,14 @@ def test_create_manifestation(client, user):
     }
     resp = client.post(url_for('manifestation_views.manifestationapi'),
                        data=json.dumps(payload),
-                       headers={'Content-Type': 'application/json'}).json
-    assert bool(resp['copyright']['rightsOf']) is True
-    assert bool(resp['manifestation']['manifestationOfWork']) is True
-    resp['copyright'].pop('rightsOf')
-    resp['manifestation'].pop('manifestationOfWork')
-    assert resp == expected
+                       headers={'Content-Type': 'application/json'})
+    resp_dict = resp.json
+    assert bool(resp_dict['copyright']['rightsOf']) is True
+    assert bool(resp_dict['manifestation']['manifestationOfWork']) is True
+    resp_dict['copyright'].pop('rightsOf')
+    resp_dict['manifestation'].pop('manifestationOfWork')
+    assert resp_dict == expected
+    assert resp.status_code == 200
 
 
 def test_create_manifestation_single_missing_param(client, user):
@@ -70,10 +73,11 @@ def test_create_manifestation_single_missing_param(client, user):
     }
     resp = client.post(url_for('manifestation_views.manifestationapi'),
                        data=json.dumps(payload),
-                       headers={'Content-Type': 'application/json'}).json
+                       headers={'Content-Type': 'application/json'})
     # TODO: I really don't know why flask_restful includes the extra '' in the
     #       error message's response.
-    assert resp['message']['manifestation'] == \
+    assert resp.status_code == 400
+    assert resp.json['message']['manifestation'] == \
         "'`datePublished` must be provided'"
 
 
@@ -87,6 +91,7 @@ def test_create_manifestation_missing_body(client, user):
     }
     resp = client.post(url_for('manifestation_views.manifestationapi'),
                        data=json.dumps(payload),
-                       headers={'Content-Type': 'application/json'}).json
-    assert resp['message']['work'] == \
+                       headers={'Content-Type': 'application/json'})
+    assert resp.status_code == 400
+    assert resp.json['message']['work'] == \
         'Missing required parameter in the JSON body'
