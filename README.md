@@ -138,7 +138,7 @@ It simply generates a verifying and signing key-pair that can be used in a
 POST-manifestation call.
 
 ```
-POST /users/
+POST /api/v1/users/
 HEADERS {"Content-Type": "application/json"}
 
 PAYLOAD: None
@@ -159,7 +159,7 @@ The attributes shown for `manifestation` and `work` can be much more diverse,
 for this see the COALA IP models definition (not yet publicly available yet).
 
 ```
-POST /manifestation/
+POST /api/v1/manifestation/
 HEADERS {"Content-Type": "application/json"}
 
 PAYLOAD:
