@@ -49,7 +49,7 @@ class ManifestationApi(Resource):
 
         copyright, manifestation, work = coalaip.register_manifestation(
             manifestation_data=manifestation,
-            user=user,
+            copyright_holder=user,
             work_data=work)
 
         res = {
