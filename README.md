@@ -160,9 +160,12 @@ RETURNS:
 ### Register a Manifestation
 
 In order to register the manifestation on BigchainDB as transactions on a
-specific user's name, `verifyingKey` and `signingKey` need to be provided here.
-The attributes shown for `manifestation` and `work` can be much more diverse,
-for this see the COALA IP models definition (not yet publicly available yet).
+specific copyright holder's name, the copyright holder's `verifyingKey` and
+`signingKey` must be provided here.
+
+Note that the attributes shown for `manifestation` and `work` can be much more
+diverse; for this, see the COALA IP models definition (not yet publicly
+available yet).
 
 ```
 POST /api/v1/manifestation/
@@ -175,7 +178,7 @@ PAYLOAD:
         "datePublished": "29-07-1954",
         "url": "<URI pointing to a media blob>",
     },
-    "user": {
+    "copyright_holder": {
         "verifyingKey": "<base58 string>",
         "signingKey": "<base58 string>",
     },
