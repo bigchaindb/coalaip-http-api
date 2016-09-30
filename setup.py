@@ -4,7 +4,7 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'pycoalaip>=0.0.1.dev2',
+    'coalaip>=0.0.1.dev2',
     'coalaip-bigchaindb>=0.0.1.dev2',
     'flask>=0.11.1',
     'flask-restful>=0.3.5',
@@ -42,9 +42,6 @@ setup(
     include_package_data=True,
     install_requires=install_requires,
     tests_require=tests_require,
-    dependency_links=[
-        'git+https://github.com/bigchaindb/pycoalaip.git@make-copyright-holder-after-registration-explicit#egg=pycoalaip-0.0.1.dev2'
-    ],
     extras_require={
         'test': tests_require,
         'dev': dev_require + tests_require + docs_require,
