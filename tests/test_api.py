@@ -17,7 +17,7 @@ def test_create_manifestation(client, user):
             'datePublished': '29-07-1954',
             'url': 'http://localhost/lordoftherings.txt',
         },
-        'user': user,
+        'copyright_holder': user,
         'work': {
             'name': 'The Lord of the Rings Triology',
             'author': 'J. R. R. Tolkien',
@@ -65,7 +65,7 @@ def test_create_manifestation_single_missing_param(client, user):
             'name': 'The Fellowship of the Ring',
             'url': 'http://localhost/lordoftherings.txt',
         },
-        'user': user,
+        'copyright_holder': user,
         'work': {
             'name': 'The Lord of the Rings Triology',
             'author': 'J. R. R. Tolkien',
