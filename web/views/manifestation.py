@@ -34,7 +34,7 @@ class ManifestationApi(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('manifestation', type=manifestation_model,
                             required=True, location='json')
-        parser.add_argument('work', type=work_model, required=True,
+        parser.add_argument('copyright_holder', type=work_model, required=True,
                             location='json')
         parser.add_argument('user', type=user_model, required=True,
                             location='json')
@@ -43,13 +43,13 @@ class ManifestationApi(Resource):
         manifestation = args['manifestation']
         work = args['work']
 
-        user = args['user']
-        user['verifying_key'] = user.pop('verifyingKey')
-        user['signing_key'] = user.pop('signingKey')
+        copyright_holder = args['copyright_holder']
+        copyright_holder['verifying_key'] = copyright_holder.pop('verifyingKey')
+        copyright_holder['signing_key'] = copyright_holder.pop('signingKey')
 
         copyright, manifestation, work = coalaip.register_manifestation(
             manifestation_data=manifestation,
-            copyright_holder=user,
+            copyright_holder=copyright_holder,
             work_data=work)
 
         res = {
