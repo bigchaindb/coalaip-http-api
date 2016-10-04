@@ -11,5 +11,10 @@ def app():
 
 
 @pytest.fixture
-def user(client):
+def alice(client):
+    return client.post(url_for('user_views.userapi')).json
+
+
+@pytest.fixture
+def bob(client):
     return client.post(url_for('user_views.userapi')).json
