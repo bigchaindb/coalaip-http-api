@@ -34,8 +34,8 @@ COALA IP.
 ## OK, how can I start experimenting?
 
 1. Read the installation section on how to install with Docker.
-2. Get familiar with the REST API provided at the end of this document.
-3. Hit against a running Docker container with a HTTP client of your choice.
+1. Get familiar with the REST API provided at the end of this document.
+1. Hit against a running Docker container with a HTTP client of your choice.
 
 
 ## Should I expose this server to the internet?
@@ -173,16 +173,16 @@ PAYLOAD:
     "manifestation": {
         "name": "The Fellowship of the Ring",
         "datePublished": "29-07-1954",
-        "url": "<URI pointing to a media blob>",
+        "url": "<URI pointing to a media blob>"
     },
     "user": {
         "verifyingKey": "<base58 string>",
-        "signingKey": "<base58 string>",
+        "signingKey": "<base58 string>"
     },
     "work": {
         "name": "The Lord of the Rings Triology",
-        "author": "J. R. R. Tolkien",
-    },
+        "author": "J. R. R. Tolkien"
+    }
 }
 
 
@@ -190,21 +190,24 @@ RETURNS:
 {
     "work": {
         "@id": "<currently empty>",
+        "@type": "CreativeWork",
         "name": "The Lord of the Rings Trilogy",
-        "author": "J. R. R. Tolkien",
+        "author": "J. R. R. Tolkien"
     },
     "manifestation": {
         "@id": "<currently empty>",
+        "@type": "CreativeWork"
         "name": "The Fellowship of the Ring",
         "manifestationOfWork": "<URI pointing to the Work's transaction ../<txid>",
         "datePublished": "29-07-1954",
         "url": "<URI pointing to a media blob>",
-        "isManifestation": true,
+        "isManifestation": true
     },
     "copyright": {
         "@id": "<currently empty>",
-        "rightsOf": "<Relative URI pointing to the Manifestation ../<txid>",
-    },
+        "@type": "Copyright"
+        "rightsOf": "<Relative URI pointing to the Manifestation ../<txid>"
+    }
 }
 ```
 
@@ -215,7 +218,6 @@ URL). While this is not particularly true, as requesting the creation
 transaction of an entity results in much more than just the entity, this is the
 implementation for now. In the future, we're planning to replace JSON-LD's URI
 linking structure with [IPLD](https://github.com/ipld/specs).
-
 
 #### Was my POST to `/manifestations/` successful?
 
@@ -229,7 +231,7 @@ or
 1. Open your browser and go to `http://localhost:9984/api/v1` (your locally
    running BigchainDB instance - if using Docker, use port `32768`).
 
-2. To check if your previously created models were included in BigchainDB, take
+1. To check if your previously created models were included in BigchainDB, take
    the string in `manifestationOfWork` or `rightsOf` and append it to the
    following link: `http://localhost:9984/api/v1/transactions/<string goes here>`.
    BigchainDB should then answer with the transaction, the model was registerd
