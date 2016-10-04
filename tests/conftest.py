@@ -11,7 +11,12 @@ def app():
 
 
 @pytest.fixture
-def user(client):
+def alice(client):
+    return client.post(url_for('user_views.userapi')).json
+
+
+@pytest.fixture
+def bob(client):
     return client.post(url_for('user_views.userapi')).json
 
 
@@ -25,7 +30,7 @@ def created_manifestation_resp(client, user):
             'datePublished': '29-07-1954',
             'url': 'http://localhost/lordoftherings.txt',
         },
-        'copyrightHolder': user,
+        'copyrightHolder': alice,
         'work': {
             'name': 'The Lord of the Rings Triology',
             'author': 'J. R. R. Tolkien',
