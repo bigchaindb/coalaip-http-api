@@ -34,9 +34,9 @@ class ManifestationApi(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('manifestation', type=manifestation_model,
                             required=True, location='json')
-        parser.add_argument('copyrightHolder', type=work_model, required=True,
+        parser.add_argument('work', type=work_model, required=True,
                             location='json')
-        parser.add_argument('user', type=user_model, required=True,
+        parser.add_argument('copyrightHolder', type=user_model, required=True,
                             location='json')
         args = parser.parse_args()
 
