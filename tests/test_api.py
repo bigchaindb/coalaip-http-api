@@ -81,7 +81,7 @@ def test_create_manifestation_single_missing_param(client, user):
         "'`datePublished` must be provided'"
 
 
-def test_create_manifestation_missing_body(client, user):
+def test_create_manifestation_missing_body(client):
     payload = {
         'manifestation': {
             'name': 'The Fellowship of the Ring',
