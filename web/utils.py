@@ -1,5 +1,7 @@
-import os
 from collections import namedtuple
+from datetime import datetime
+import os
+
 
 BigchainDBConfiguration = namedtuple('BigchainDBConfiguration', [
     'hostname',

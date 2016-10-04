@@ -95,3 +95,17 @@ def test_create_manifestation_missing_body(client):
     assert resp.status_code == 400
     assert resp.json['message']['work'] == \
         'Missing required parameter in the JSON body'
+
+
+def test_create_right(client, user):
+    payload = {
+        'user': user,
+        'right': {
+            'rightsOf': 'http://localhost/api/v1/transactions/abc',
+            'license': 'http://www.ascribe.io/terms',
+        }
+    }
+    resp = client.post(url_for('right_views.rightapi'),
+                       data=json.dumps(payload),
+                       headers={'Content-Type': 'application/json'})
+    assert resp.status_code == 200
