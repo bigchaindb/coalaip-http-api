@@ -34,7 +34,7 @@ class ManifestationApi(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('manifestation', type=manifestation_model,
                             required=True, location='json')
-        parser.add_argument('copyright_holder', type=work_model, required=True,
+        parser.add_argument('copyrightHolder', type=work_model, required=True,
                             location='json')
         parser.add_argument('user', type=user_model, required=True,
                             location='json')
@@ -43,7 +43,7 @@ class ManifestationApi(Resource):
         manifestation = args['manifestation']
         work = args['work']
 
-        copyright_holder = args['copyright_holder']
+        copyright_holder = args['copyrightHolder']
         copyright_holder['verifying_key'] = copyright_holder.pop('verifyingKey')
         copyright_holder['signing_key'] = copyright_holder.pop('signingKey')
 
