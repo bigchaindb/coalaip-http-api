@@ -2,8 +2,9 @@ from flask import Blueprint
 from flask_restful import reqparse, Resource, Api
 
 from coalaip import CoalaIp
-from coalaip_bigchaindb import Plugin
-from web.utils import get_bigchaindb_api_url, parse_model
+from coalaip_bigchaindb.plugin import Plugin
+from web.models import right_model, user_model
+from web.utils import get_bigchaindb_api_url
 
 
 coalaip = CoalaIp(Plugin(get_bigchaindb_api_url()))
@@ -14,24 +15,29 @@ right_api = Api(right_views)
 
 class RightApi(Resource):
     def post(self):
-        """API endpoint to attach a Right to a Manifestation or another Right
-        """
-        user_model = parse_model(['verifyingKey', 'signingKey'])
-        right_model = parse_model(['rightsOf', 'license'])
-
         parser = reqparse.RequestParser()
-        parser.add_argument('right', type=right_model,
-                            required=True, location='json')
-        parser.add_argument('user', type=user_model, required=True,
+        parser.add_argument('right', type=right_model, required=True,
                             location='json')
-
+        parser.add_argument('sourceRightId', type=str, required=True,
+                            location='json')
+        parser.add_argument('currentHolder', type=user_model, required=True,
+                            location='json')
         args = parser.parse_args()
+
+        source_right_id = args['sourceRightId']
         right = args['right']
-        user = args['user']
+        right['allowedBy'] = source_right_id
 
-        right = coalaip.derive_right(right_data=right, current_holder=user)
+        current_holder = args['currentHolder']
+        current_holder['verifying_key'] = current_holder.pop('verifyingKey')
+        current_holder['signing_key'] = current_holder.pop('signingKey')
 
-        return right.to_jsonld()
+        right = coalaip.derive_right(right_data=right,
+                                     current_holder=current_holder)
+
+        res = {'right': right.to_jsonld()}
+
+        return res
 
 
 right_api.add_resource(RightApi, '/rights', strict_slashes=False)
