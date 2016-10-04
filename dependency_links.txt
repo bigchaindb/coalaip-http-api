@@ -1,5 +1,6 @@
 --process-dependency-links
 
+git+https://github.com/bigchaindb/bigchaindb.git
 git+https://github.com/bigchaindb/bigchaindb-driver.git
 git+https://github.com/bigchaindb/pycoalaip.git
 git+https://github.com/bigchaindb/pycoalaip-bigchaindb.git
