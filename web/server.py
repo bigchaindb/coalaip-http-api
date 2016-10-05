@@ -11,7 +11,7 @@ import gunicorn.app.base
 
 from flask import Flask
 
-from web.views.user import user_views
+from web.views.users import user_views
 from web.views.manifestations import manifestation_views
 
 
