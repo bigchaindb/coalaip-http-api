@@ -48,16 +48,16 @@ def test_create_manifestation(client, user):
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
     resp_dict = resp.json
-    copyright = resp_dict['copyright']
+    copyright_ = resp_dict['copyright']
     manifestation = resp_dict['manifestation']
     work = resp_dict['work']
 
-    assert bool(copyright['rightsOf']) is True
+    assert bool(copyright_['rightsOf']) is True
     assert bool(manifestation['manifestationOfWork']) is True
 
     # Check @ids
-    assert copyright['@id'].startswith('../right/')
-    assert bool(copyright['@id'].strip('../right/')) is True
+    assert copyright_['@id'].startswith('../right/')
+    assert bool(copyright_['@id'].strip('../right/')) is True
     assert bool(manifestation['@id']) is True
     assert work['@id'].startswith('../work/')
     assert bool(work['@id'].strip('../work/')) is True

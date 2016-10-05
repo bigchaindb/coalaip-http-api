@@ -33,7 +33,7 @@ class ManifestationApi(Resource):
             'signing_key': copyright_holder.pop('signingKey')
         }
 
-        copyright, manifestation, work = coalaip.register_manifestation(
+        copyright_, manifestation, work = coalaip.register_manifestation(
             manifestation_data=manifestation,
             copyright_holder=copyright_holder,
             work_data=work)
@@ -41,7 +41,7 @@ class ManifestationApi(Resource):
         # Add the appropraite @id to the JSON-LD
         res = {}
         for (entity, id_template, key) in [
-                (copyright, '../right/{}', 'copyright'),
+                (copyright_, '../right/{}', 'copyright'),
                 (manifestation, '{}', 'manifestation'),
                 (work, '../work/{}', 'work')]:
             ld_data = entity.to_jsonld()
