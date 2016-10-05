@@ -44,6 +44,6 @@ def parse_model(required_fields):
             except KeyError:
                 raise KeyError('`{}` must be provided'.format(field))
             if bool(value) is not True:
-                raise ValueError("`{}`'s value must be defined")
+                raise ValueError("`{}`'s value must be defined".format(field))
         return inputs
     return _parse_model
