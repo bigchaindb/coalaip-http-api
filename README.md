@@ -168,7 +168,7 @@ diverse; for this, see the COALA IP models definition (not yet publicly
 available yet).
 
 ```
-POST /api/v1/manifestation/
+POST /api/v1/manifestations/
 HEADERS {"Content-Type": "application/json"}
 
 PAYLOAD:
