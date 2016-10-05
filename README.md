@@ -287,7 +287,7 @@ PAYLOAD:
 RETURNS:
 {
     "right": {
-        "@id": "<currently empty>",
+        "@id": "<Relative URI with the ID of the entity on BigchainDB>",
         "@type": "Right",
         "allowedBy": <The sourceRightId>,
         "license": "<Legal license text or URI pointing to a license document>",

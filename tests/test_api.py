@@ -122,7 +122,6 @@ def test_create_right(client, user):
         'right': {
             '@context': ['<coalaip placeholder>', 'http://schema.org/'],
             '@type': 'Right',
-            '@id': '',
             'allowedBy': payload['sourceRightId'],
             'license': 'http://www.ascribe.io/terms',
         }
@@ -131,8 +130,12 @@ def test_create_right(client, user):
     resp = client.post(url_for('right_views.rightapi'),
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
+    resp_dict = resp.json
+    assert bool(resp_dict['right']['@id']) is True
+
+    resp_dict['right'].pop('@id')
+    assert resp_dict == expected
     assert resp.status_code == 200
-    assert resp.json == expected
 
 
 def test_create_right_missing_single_attribute(client, user):
