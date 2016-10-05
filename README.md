@@ -260,7 +260,7 @@ Also see transferring a Right on how to transfer a registered Right to new
 holders.
 
 ```
-POST /api/v1/right/
+POST /api/v1/rights/
 HEADERS {"Content-Type": "application/json"}
 
 PAYLOAD:
