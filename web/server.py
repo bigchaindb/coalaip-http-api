@@ -12,7 +12,7 @@ import gunicorn.app.base
 from flask import Flask
 
 from web.views.user import user_views
-from web.views.manifestation import manifestation_views
+from web.views.manifestations import manifestation_views
 
 
 class StandaloneApplication(gunicorn.app.base.BaseApplication):
