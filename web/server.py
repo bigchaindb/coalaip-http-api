@@ -13,7 +13,7 @@ from flask import Flask
 
 from web.views.users import user_views
 from web.views.manifestations import manifestation_views
-from web.views.right import right_views
+from web.views.rights import right_views
 
 
 class StandaloneApplication(gunicorn.app.base.BaseApplication):
