@@ -169,3 +169,60 @@ def test_create_right_missing_argument_in_body(client, alice):
     assert resp.status_code == 400
     assert resp.json['message']['sourceRightId'] == \
         'Missing required parameter in the JSON body'
+
+
+def test_transfer_right(client, alice, bob, carly, created_derived_right):
+    from time import sleep
+
+    payload = {
+        'rightId': created_derived_right['@id'],
+        'rightsAssignment': {
+            'action': 'loan',
+        },
+        'currentHolder': alice,
+        'to': bob,
+    }
+
+    expected = {
+        'rightsAssignment': {
+            '@context': ['<coalaip placeholder>', 'http://schema.org/'],
+            '@type': 'RightsTransferAction',
+            '@id': '',
+            'action': 'loan',
+        },
+    }
+
+    resp = client.post(url_for('right_views.righttransferapi'),
+                       data=json.dumps(payload),
+                       headers={'Content-Type': 'application/json'})
+    assert resp.status_code == 200
+    assert resp.json == expected
+
+    # Test re-transfer, after waiting for the first transfer to become valid
+    sleep(3)
+    retransfer_payload = {
+        'rightId': created_derived_right['@id'],
+        'rightsAssignment': {
+            'action': 'reloan',
+        },
+        'currentHolder': bob,
+        'to': {
+            'publicKey': carly['publicKey'],
+            'privateKey': None,
+        }
+    }
+
+    retransfer_expected = {
+        'rightsAssignment': {
+            '@context': ['<coalaip placeholder>', 'http://schema.org/'],
+            '@type': 'RightsTransferAction',
+            '@id': '',
+            'action': 'reloan',
+        },
+    }
+
+    resp = client.post(url_for('right_views.righttransferapi'),
+                       data=json.dumps(retransfer_payload),
+                       headers={'Content-Type': 'application/json'})
+    assert resp.status_code == 200
+    assert resp.json == retransfer_expected
