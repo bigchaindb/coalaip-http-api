@@ -281,7 +281,7 @@ PAYLOAD:
         "publicKey": "<base58 string>",
         "privateKey": "<base58 string>"
     },
-    "sourceRightId": "<ID of an existing Right that allows for the creation of this new Right>"
+    "sourceRightId": "<ID of an existing Right that allows for the creation of this new Right; must be held by the user specified in `currentHolder`>"
 }
 
 RETURNS:
@@ -289,8 +289,49 @@ RETURNS:
     "right": {
         "@id": "<Relative URI with the ID of the entity on BigchainDB>",
         "@type": "Right",
-        "allowedBy": <The sourceRightId>,
+        "allowedBy": "<sourceRightId>",
         "license": "<Legal license text or URI pointing to a license document>",
+    }
+}
+```
+
+To check if your POST was successful, follow the steps in [registering a
+manifestation](#was-my-post-to-manifestations-successful) and use the returned
+Right's data instead.
+
+
+### Transfer a Right
+
+You may only transfer a Right that you are currently holding. RightsAssignment
+entities are automatically created for each transfer and may include additional,
+arbitrary attributes if a `rightsAssignment` dict is given in the payload.
+
+```
+POST /api/v1/rights/transfer
+HEADERS {"Content-Type": "application/json"}
+
+PAYLOAD:
+{
+    "rightId": "<ID of an existing Right to transfer; must be held by the user specified in `currentHolder`>",
+    "rightsAssignment": {
+        ...
+    },
+    "currentHolder": {
+        "publicKey": "<base58 string>",
+        "privateKey": "<base58 string>"
+    },
+    "to": {
+        "publicKey": "<base58 string>",
+        "privateKey": "<base58 string>"
+    }
+}
+
+RETURNS:
+{
+    "rightsAssignment": {
+        "@id": "<currently empty>",
+        "@type": "RightsTransferAction",
+        ... (provided `rightsAssignment`)
     }
 }
 ```
