@@ -28,14 +28,12 @@ def test_create_manifestation(client, user):
         'work': {
             '@context': ['<coalaip placeholder>', 'http://schema.org/'],
             '@type': 'CreativeWork',
-            '@id': '',
             'name': 'The Lord of the Rings Triology',
             'author': 'J. R. R. Tolkien',
         },
         'manifestation': {
             '@context': ['<coalaip placeholder>', 'http://schema.org/'],
             '@type': 'CreativeWork',
-            '@id': '',
             'name': 'The Fellowship of the Ring',
             'datePublished': '29-07-1954',
             'url': 'http://localhost/lordoftherings.txt',
@@ -44,17 +42,31 @@ def test_create_manifestation(client, user):
         'copyright': {
             '@context': ['<coalaip placeholder>', 'http://schema.org/'],
             '@type': 'Copyright',
-            '@id': '',
         },
     }
     resp = client.post(url_for('manifestation_views.manifestationapi'),
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
     resp_dict = resp.json
-    assert bool(resp_dict['copyright']['rightsOf']) is True
-    assert bool(resp_dict['manifestation']['manifestationOfWork']) is True
+    copyright = resp_dict['copyright']
+    manifestation = resp_dict['manifestation']
+    work = resp_dict['work']
+
+    assert bool(copyright['rightsOf']) is True
+    assert bool(manifestation['manifestationOfWork']) is True
+
+    # Check @ids
+    assert copyright['@id'].startswith('../right/')
+    assert bool(copyright['@id'].strip('../right/')) is True
+    assert bool(manifestation['@id']) is True
+    assert work['@id'].startswith('../work/')
+    assert bool(work['@id'].strip('../work/')) is True
+
     resp_dict['copyright'].pop('rightsOf')
     resp_dict['manifestation'].pop('manifestationOfWork')
+    resp_dict['copyright'].pop('@id')
+    resp_dict['manifestation'].pop('@id')
+    resp_dict['work'].pop('@id')
     assert resp_dict == expected
     assert resp.status_code == 200
 

@@ -192,13 +192,13 @@ PAYLOAD:
 RETURNS:
 {
     "work": {
-        "@id": "<currently empty>",
+        "@id": "<Relative URI with the ID of the entity on BigchainDB>",
         "@type": "CreativeWork",
         "name": "The Lord of the Rings Trilogy",
         "author": "J. R. R. Tolkien"
     },
     "manifestation": {
-        "@id": "<currently empty>",
+        "@id": "<Relative URI with the ID of the entity on BigchainDB>",
         "@type": "CreativeWork"
         "name": "The Fellowship of the Ring",
         "manifestationOfWork": "<URI pointing to the Work's transaction ../<txid>",
@@ -207,20 +207,28 @@ RETURNS:
         "isManifestation": true
     },
     "copyright": {
-        "@id": "<currently empty>",
+        "@id": "<Relative URI with the ID of the entity on BigchainDB>",
         "@type": "Copyright"
         "rightsOf": "<Relative URI pointing to the Manifestation ../<txid>"
     }
 }
 ```
 
-#### Why is `@id` currently empty?
+#### What are the returned `@id`s?
 
-An empty `@id` resolves the entity's URI to be the current document base (i.e.
-URL). While this is not particularly true, as requesting the creation
-transaction of an entity results in much more than just the entity, this is the
-implementation for now. In the future, we're planning to replace JSON-LD's URI
-linking structure with [IPLD](https://github.com/ipld/specs).
+The returned `@id`s denote the persisted ID of the entities on BigchainDB as a
+relative URI to the current document base (i.e. the route URL, or
+`/manifestations` in this case). For now, these point to the `CREATE`
+transaction for the entity; in the future, they will be changing to be an asset
+ID instead.
+
+In the case of the returned Work and Copyright, their `@id`s are slightly
+inconvenient to process as they live under a different base URL (`/work` and
+`/right`, respectively). You should strip awsay the leading pathes to use just
+the persisted IDs of these entities.
+
+Note that in the future, we also plan to replace the JSON-LD linking structure
+with [IPLD](https://github.com/ipld/specs).
 
 #### Was my POST to `/manifestations/` successful?
 
@@ -232,13 +240,14 @@ To check if your POST was successful, try validating by doing the following:
 or
 
 1. Open your browser and go to `http://localhost:9984/api/v1` (your locally
-   running BigchainDB instance - if using Docker, use port `32768`).
+   running BigchainDB instance - if using the default Docker settings, use port
+   `32768` instead).
 
-1. To check if your previously created models were included in BigchainDB, take
-   the string in `manifestationOfWork` or `rightsOf` and append it to the
-   following link: `http://localhost:9984/api/v1/transactions/<string goes here>`.
-   BigchainDB should then answer with the transaction, the model was registerd
-   in (if using Docker, use port `32768`).
+1. To check if your previously created entities were included in BigchainDB,
+   take the string in any of the returned `@id`s and append it to the following
+   link: `http://localhost:9984/api/v1/transactions/<string goes here>`.
+   BigchainDB should then answer with the transaction the entity was registered
+   in (if using the default Docker settings, use port `32768` instead).
 
 **Note**: If running on Docker and/or Docker Machine, substitute the hostnames
 and ports of the above URLs with your Docker settings, as necessary (see the

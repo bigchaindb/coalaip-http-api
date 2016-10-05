@@ -38,11 +38,15 @@ class ManifestationApi(Resource):
             copyright_holder=copyright_holder,
             work_data=work)
 
-        res = {
-            'manifestation': manifestation.to_jsonld(),
-            'work': work.to_jsonld(),
-            'copyright': copyright.to_jsonld()
-        }
+        # Add the appropraite @id to the JSON-LD
+        res = {}
+        for (entity, id_template, key) in [
+                (copyright, '../right/{}', 'copyright'),
+                (manifestation, '{}', 'manifestation'),
+                (work, '../work/{}', 'work')]:
+            ld_data = entity.to_jsonld()
+            ld_data['@id'] = id_template.format(entity.persist_id)
+            res[key] = ld_data
 
         return res
 
