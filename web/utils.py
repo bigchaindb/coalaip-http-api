@@ -1,5 +1,7 @@
-import os
 from collections import namedtuple
+from datetime import datetime
+import os
+
 
 BigchainDBConfiguration = namedtuple('BigchainDBConfiguration', [
     'hostname',
@@ -32,3 +34,16 @@ def get_bigchaindb_api_url():
     return 'http://{hostname}:{port}/{api_path}'.format(hostname=hostname,
                                                         port=port,
                                                         api_path=api_path)
+
+
+def parse_model(required_fields):
+    def _parse_model(inputs):
+        for field in required_fields:
+            try:
+                value = inputs[field]
+            except KeyError:
+                raise KeyError('`{}` must be provided'.format(field))
+            if bool(value) is not True:
+                raise ValueError("`{}`'s value must be defined".format(field))
+        return inputs
+    return _parse_model

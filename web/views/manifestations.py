@@ -3,6 +3,7 @@ from flask_restful import reqparse, Resource, Api
 
 from coalaip import CoalaIp
 from coalaip_bigchaindb.plugin import Plugin
+from web.models import manifestation_model, user_model, work_model
 from web.utils import get_bigchaindb_api_url
 
 
@@ -12,25 +13,8 @@ manifestation_views = Blueprint('manifestation_views', __name__)
 manifestation_api = Api(manifestation_views)
 
 
-def parse_model(required_fields):
-    def _parse_model(inputs):
-        for field in required_fields:
-            try:
-                value = inputs[field]
-            except KeyError:
-                raise KeyError('`{}` must be provided'.format(field))
-            if bool(value) is not True:
-                raise ValueError("`{}`'s value must be defined")
-        return inputs
-    return _parse_model
-
-
 class ManifestationApi(Resource):
     def post(self):
-        manifestation_model = parse_model(['name', 'datePublished', 'url'])
-        work_model = parse_model(['name', 'author'])
-        user_model = parse_model(['verifyingKey', 'signingKey'])
-
         parser = reqparse.RequestParser()
         parser.add_argument('manifestation', type=manifestation_model,
                             required=True, location='json')

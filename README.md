@@ -243,3 +243,49 @@ or
 **Note**: If running on Docker and/or Docker Machine, substitute the hostnames
 and ports of the above URLs with your Docker settings, as necessary (see the
 [running with Docker section](#how-to-run-with-docker) for more help).
+
+
+### Register a Right allowed by another Right or Copyright
+
+Rather than registering new Rights directly to resulting rightsholders, new
+Rights are initially registered to the current holder of the existing Right or
+Copyright that allows for the new Right's creation. Doing so allows the initial
+link between the source rightsholder and resulting rightsholder to be kept as
+part of the new Right's chain of provenance.
+
+Note that the attributes for the `right` may be much more diverse; see the COALA
+IP models definition (not yet publicly available yet).
+
+Also see transferring a Right on how to transfer a registered Right to new
+holders.
+
+```
+POST /api/v1/rights/
+HEADERS {"Content-Type": "application/json"}
+
+PAYLOAD:
+{
+    "right": {
+        "license": "<Legal license text or URI pointing to a license document>"
+    },
+    "currentHolder": {
+        "verifyingKey": "<base58 string>",
+        "signingKey": "<base58 string>"
+    },
+    "sourceRightId": "<ID of an existing Right that allows for the creation of this new Right>"
+}
+
+RETURNS:
+{
+    "right": {
+        "@id": "<currently empty>",
+        "@type": "Right",
+        "allowedBy": <The sourceRightId>,
+        "license": "<Legal license text or URI pointing to a license document>",
+    }
+}
+```
+
+To check if your POST was successful, follow the steps in [registering a
+manifestation](#was-my-post-to-manifestations-successful) and use the returned
+Right's data instead.

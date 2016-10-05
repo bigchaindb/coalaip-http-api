@@ -59,7 +59,7 @@ def test_create_manifestation(client, user):
     assert resp.status_code == 200
 
 
-def test_create_manifestation_single_missing_param(client, user):
+def test_create_manifestation_missing_single_attribute(client, user):
     payload = {
         'manifestation': {
             'name': 'The Fellowship of the Ring',
@@ -81,7 +81,7 @@ def test_create_manifestation_single_missing_param(client, user):
         "'`datePublished` must be provided'"
 
 
-def test_create_manifestation_missing_body(client):
+def test_create_manifestation_missing_argument_in_body(client):
     payload = {
         'manifestation': {
             'name': 'The Fellowship of the Ring',
@@ -94,4 +94,61 @@ def test_create_manifestation_missing_body(client):
                        headers={'Content-Type': 'application/json'})
     assert resp.status_code == 400
     assert resp.json['message']['work'] == \
+        'Missing required parameter in the JSON body'
+
+
+def test_create_right(client, user):
+    payload = {
+        'currentHolder': user,
+        'right': {
+            'license': 'http://www.ascribe.io/terms',
+        },
+        'sourceRightId': 'mockId',
+    }
+
+    expected = {
+        'right': {
+            '@context': '<coalaip placeholder>',
+            '@type': 'Right',
+            '@id': '',
+            'allowedBy': payload['sourceRightId'],
+            'license': 'http://www.ascribe.io/terms',
+        }
+    }
+
+    resp = client.post(url_for('right_views.rightapi'),
+                       data=json.dumps(payload),
+                       headers={'Content-Type': 'application/json'})
+    assert resp.status_code == 200
+    assert resp.json == expected
+
+
+def test_create_right_missing_single_attribute(client, user):
+    payload = {
+        'currentHolder': user,
+        'right': {
+            'notALicense': 'this is not a license',
+        },
+        'sourceRightId': 'mockId',
+    }
+    resp = client.post(url_for('right_views.rightapi'),
+                       data=json.dumps(payload),
+                       headers={'Content-Type': 'application/json'})
+    assert resp.status_code == 400
+    assert resp.json['message']['right'] == \
+        "'`license` must be provided'"
+
+
+def test_create_right_missing_argument_in_body(client, user):
+    payload = {
+        'currentHolder': user,
+        'right': {
+            'license': 'http://www.ascribe.io/terms',
+        },
+    }
+    resp = client.post(url_for('right_views.rightapi'),
+                       data=json.dumps(payload),
+                       headers={'Content-Type': 'application/json'})
+    assert resp.status_code == 400
+    assert resp.json['message']['sourceRightId'] == \
         'Missing required parameter in the JSON body'
