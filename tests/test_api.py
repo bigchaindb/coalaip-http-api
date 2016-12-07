@@ -42,7 +42,7 @@ def test_create_manifestation(client, user):
             'isManifestation': True,
         },
         'copyright': {
-            '@context': '<coalaip placeholder>',
+            '@context': ['<coalaip placeholder>', 'http://schema.org/'],
             '@type': 'Copyright',
             '@id': '',
         },
@@ -108,7 +108,7 @@ def test_create_right(client, user):
 
     expected = {
         'right': {
-            '@context': '<coalaip placeholder>',
+            '@context': ['<coalaip placeholder>', 'http://schema.org/'],
             '@type': 'Right',
             '@id': '',
             'allowedBy': payload['sourceRightId'],
