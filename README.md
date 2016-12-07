@@ -178,7 +178,7 @@ PAYLOAD:
         "datePublished": "29-07-1954",
         "url": "<URI pointing to a media blob>"
     },
-    "copyright_holder": {
+    "copyrightHolder": {
         "verifyingKey": "<base58 string>",
         "signingKey": "<base58 string>"
     },
