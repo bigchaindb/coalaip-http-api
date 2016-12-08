@@ -35,7 +35,9 @@ class RightApi(Resource):
         right = coalaip.derive_right(right_data=right,
                                      current_holder=current_holder)
 
-        res = {'right': right.to_jsonld()}
+        right_jsonld = right.to_jsonld()
+        right_jsonld['@id'] = right.persist_id
+        res = {'right': right_jsonld}
 
         return res
 
