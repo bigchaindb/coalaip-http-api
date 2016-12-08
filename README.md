@@ -223,8 +223,8 @@ transaction for the entity; in the future, they will be changing to be an asset
 ID instead.
 
 In the case of the returned Work and Copyright, their `@id`s are slightly
-inconvenient to process as they live under a different base URL (`/work` and
-`/right`, respectively). You should strip away the leading pathes to use just
+inconvenient to process as they live under a different base URL (`/works` and
+`/rights`, respectively). You should strip away the leading paths to use just
 the persisted IDs of these entities.
 
 Note that in the future, we also plan to replace the JSON-LD linking structure

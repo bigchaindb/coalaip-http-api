@@ -41,9 +41,9 @@ class ManifestationApi(Resource):
         # Add the appropraite @id to the JSON-LD
         res = {}
         for (entity, id_template, key) in [
-                (copyright_, '../right/{}', 'copyright'),
+                (copyright_, '../rights/{}', 'copyright'),
                 (manifestation, '{}', 'manifestation'),
-                (work, '../work/{}', 'work')]:
+                (work, '../works/{}', 'work')]:
             ld_data = entity.to_jsonld()
             ld_data['@id'] = id_template.format(entity.persist_id)
             res[key] = ld_data

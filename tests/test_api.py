@@ -56,11 +56,11 @@ def test_create_manifestation(client, user):
     assert bool(manifestation['manifestationOfWork']) is True
 
     # Check @ids
-    assert copyright_['@id'].startswith('../right/')
-    assert bool(copyright_['@id'].strip('../right/')) is True
+    assert copyright_['@id'].startswith('../rights/')
+    assert bool(copyright_['@id'].strip('../rights/')) is True
     assert bool(manifestation['@id']) is True
-    assert work['@id'].startswith('../work/')
-    assert bool(work['@id'].strip('../work/')) is True
+    assert work['@id'].startswith('../works/')
+    assert bool(work['@id'].strip('../works/')) is True
 
     resp_dict['copyright'].pop('rightsOf')
     resp_dict['manifestation'].pop('manifestationOfWork')
