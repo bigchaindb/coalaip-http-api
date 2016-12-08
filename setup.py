@@ -4,8 +4,10 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'coalaip>=0.0.1.dev2',
-    'coalaip-bigchaindb>=0.0.1.dev2',
+    'coalaip>=0.0.1.dev3',
+    'coalaip-bigchaindb>=0.0.1.dev3',
+    'bigchaindb==0.8.0',
+    'bigchaindb-driver==0.1.2',
     'flask>=0.11.1',
     'flask-restful>=0.3.5',
     'gunicorn>=19.6.0'
