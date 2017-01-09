@@ -10,6 +10,7 @@ import multiprocessing
 import gunicorn.app.base
 
 from flask import Flask
+from flask_cors import CORS
 
 from web.views.users import user_views
 from web.views.manifestations import manifestation_views
@@ -58,6 +59,9 @@ def create_app(settings):
 
     app = Flask(__name__)
 
+    if not settings.get('cors_protection', True):
+        CORS(app)
+
     app.debug = settings.get('debug', False)
 
     app.register_blueprint(user_views, url_prefix='/api/v1')
@@ -101,9 +105,12 @@ if __name__ == '__main__':
     if not port:
         port = '3000'
 
+    cors_protection = os.environ.get('CORS_PROTECTION', 'True') == 'True'
+
     # start the web api
     settings = {
         'bind': '{hostname}:{port}'.format(hostname=hostname, port=port),
+        'cors_protection': cors_protection,
         'workers': 1,
         'threads': 1
     }
