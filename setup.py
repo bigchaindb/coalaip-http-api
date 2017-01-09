@@ -10,7 +10,8 @@ install_requires = [
     'bigchaindb-driver==0.1.2',
     'flask>=0.11.1',
     'flask-restful>=0.3.5',
-    'gunicorn>=19.6.0'
+    'gunicorn>=19.6.0',
+    'flask-cors==3.0.2'
 ]
 
 tests_require = [
