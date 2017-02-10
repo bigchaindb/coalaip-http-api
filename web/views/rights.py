@@ -29,8 +29,8 @@ class RightApi(Resource):
         right['allowedBy'] = source_right_id
 
         current_holder = args['currentHolder']
-        current_holder['verifying_key'] = current_holder.pop('verifyingKey')
-        current_holder['signing_key'] = current_holder.pop('signingKey')
+        current_holder['public_key'] = current_holder.pop('publicKey')
+        current_holder['private_key'] = current_holder.pop('privateKey')
 
         right = coalaip.derive_right(right_data=right,
                                      current_holder=current_holder)
