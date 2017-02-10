@@ -322,9 +322,10 @@ transfer transaction recorded on BigchainDB links to that contract (via the
 RightsAssignment) and provides a record of the parties, the date of the
 transaction, and the contract that applies.
 
-You may only transfer a Right that you are currently holding. RightsAssignment
-entities are automatically created for each transfer and may include additional,
-arbitrary attributes if a `rightsAssignment` dict is given in the payload.
+You may only transfer a Right (or Copyright) that you are currently holding.
+RightsAssignment entities are automatically created for each transfer and may
+include additional arbitrary attributes if a `rightsAssignment` dict is given
+in the payload.
 
 ```
 POST /api/v1/rights/transfer
@@ -363,3 +364,36 @@ conform to the [user model](#create-users).
 To check if your POST was successful, follow the steps in [registering a
 manifestation](#was-my-post-to-manifestations-successful) and use the returned
 Right's data instead.
+
+
+### Querying the ownership history of a Right
+
+The ownership history of a Right is represented as an time-series array of
+ownership events (sorted from the initial creation of the entity), each in the
+form of:
+
+```json
+{
+    "user": {
+        "publicKey": "<public key of the owner>",
+        "privateKey": null
+    },
+    "eventId": "<transaction id of the transaction detailing the ownership event>"
+}
+```
+
+Note that, as in the recipient (`to`) of a Rights transfer, the returned user
+models only contain their public information.
+
+```
+GET /api/v1/rights/<ID of an existing right>
+
+RETURNS:
+[{
+    "user": {
+        "publicKey": "<public key of the owner>",
+        "privateKey": null
+    },
+    "eventId": "<transaction id of the transaction detailing the ownership event>"
+}, ...]
+```
