@@ -320,7 +320,7 @@ PAYLOAD:
     },
     "to": {
         "publicKey": "<base58 string>",
-        "privateKey": "<base58 string>"
+        "privateKey": null
     }
 }
 
@@ -333,6 +333,10 @@ RETURNS:
     }
 }
 ```
+
+Note that the `to` field in the payload may avoid specifying the new holder's
+private details (i.e. `signingKey`), but should still provide the keys needed to
+conform to the [user model](#create-users).
 
 To check if your POST was successful, follow the steps in [registering a
 manifestation](#was-my-post-to-manifestations-successful) and use the returned

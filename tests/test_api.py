@@ -180,7 +180,10 @@ def test_transfer_right(client, alice, bob, carly, created_derived_right):
             'action': 'loan',
         },
         'currentHolder': alice,
-        'to': bob,
+        'to': {
+            'publicKey': bob['publicKey'],
+            'privateKey': None,
+        }
     }
 
     expected = {
