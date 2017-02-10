@@ -99,3 +99,29 @@ def transferred_derived_right(client, alice, bob, created_derived_right):
     # Sleep for a bit to let the transaction become valid
     sleep(3)
     return created_derived_right
+
+
+@pytest.fixture
+def retransferred_derived_right(client, bob, carly, transferred_derived_right):
+    import json
+    from time import sleep
+
+    payload = {
+        'rightId': transferred_derived_right['@id'],
+        'rightsAssignment': {
+            'action': 'loan',
+        },
+        'currentHolder': bob,
+        'to': {
+            'publicKey': carly['publicKey'],
+            'privateKey': None,
+        }
+    }
+
+    client.post(url_for('right_views.righttransferapi'),
+                data=json.dumps(payload),
+                headers={'Content-Type': 'application/json'})
+
+    # Sleep for a bit to let the transaction become valid
+    sleep(3)
+    return transferred_derived_right

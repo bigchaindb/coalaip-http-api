@@ -227,3 +227,16 @@ def test_retransferred_right(client, bob, carly, transferred_derived_right):
                        headers={'Content-Type': 'application/json'})
     assert resp.status_code == 200
     assert resp.json == retransfer_expected
+
+
+def test_right_history(client, alice, bob, carly, retransferred_derived_right):
+    right_id = retransferred_derived_right['@id']
+    resp = client.get(
+        url_for('right_views.righthistoryapi', right_id=right_id))
+    assert resp.status_code == 200
+    assert resp.json[0]['user']['publicKey'] == alice['publicKey']
+    assert resp.json[1]['user']['publicKey'] == bob['publicKey']
+    assert resp.json[2]['user']['publicKey'] == carly['publicKey']
+
+    # First transaction should be the CREATE transaction
+    assert resp.json[0]['eventId'] == right_id
