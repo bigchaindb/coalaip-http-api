@@ -6,8 +6,8 @@ from flask import url_for
 def test_create_user(client):
     resp = client.post(url_for('user_views.userapi'))
     assert resp.status_code == 200
-    assert resp.json['verifyingKey']
-    assert resp.json['signingKey']
+    assert resp.json['publicKey']
+    assert resp.json['privateKey']
 
 
 def test_create_manifestation(client, user):

@@ -140,7 +140,7 @@ The API server can be configured with a number of environment variables [see
 ### Create Users
 
 This call will not store any data on the running instance of BigchainDB.
-It simply generates a verifying and signing key-pair that can be used in a
+It simply generates a public/private key-pair that can be used in a
 POST-manifestation call.
 
 ```
@@ -151,8 +151,8 @@ PAYLOAD: None
 
 RETURNS:
 {
-    "verifyingKey": "<base58 string>",
-    "signingKey": "<base58 string>",
+    "publicKey": "<base58 string>",
+    "privateKey": "<base58 string>",
 }
 ```
 
@@ -160,8 +160,8 @@ RETURNS:
 ### Register a Manifestation
 
 In order to register the manifestation on BigchainDB as transactions on a
-specific copyright holder's name, the copyright holder's `verifyingKey` and
-`signingKey` must be provided here.
+specific copyright holder's name, the copyright holder's `publicKey` and
+`privateKey` must be provided here.
 
 Note that the attributes shown for `manifestation` and `work` can be much more
 diverse; for this, see their [COALA IP models definition](https://github.com/COALAIP/specs/tree/master/data-structure#rrm-creation).
@@ -178,8 +178,8 @@ PAYLOAD:
         "url": "<URI pointing to a media blob>"
     },
     "copyrightHolder": {
-        "verifyingKey": "<base58 string>",
-        "signingKey": "<base58 string>"
+        "publicKey": "<base58 string>",
+        "privateKey": "<base58 string>"
     },
     "work": {
         "name": "The Lord of the Rings Triology",
@@ -277,8 +277,8 @@ PAYLOAD:
         "license": "<Legal license text or URI pointing to a license document>"
     },
     "currentHolder": {
-        "verifyingKey": "<base58 string>",
-        "signingKey": "<base58 string>"
+        "publicKey": "<base58 string>",
+        "privateKey": "<base58 string>"
     },
     "sourceRightId": "<ID of an existing Right that allows for the creation of this new Right>"
 }
