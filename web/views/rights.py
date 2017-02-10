@@ -42,6 +42,21 @@ class RightApi(Resource):
         return res
 
 
+class RightHistoryApi(Resource):
+    def get(self, right_id):
+        # Don't worry about whether the entity corresponding to `right_id` is a
+        # Right or a Copyright since we won't be loading it
+        right = entities.Right.from_persist_id(right_id, plugin=coalaip.plugin,
+                                               force_load=False)
+        return [{
+            'user': {
+                'publicKey': event['user']['public_key'],
+                'privateKey': event['user']['private_key'],
+            },
+            'eventId': event['event_id'],
+        } for event in right.history]
+
+
 class RightTransferApi(Resource):
     def post(self):
         parser = reqparse.RequestParser()
@@ -86,5 +101,7 @@ class RightTransferApi(Resource):
 
 
 right_api.add_resource(RightApi, '/rights', strict_slashes=False)
+right_api.add_resource(RightHistoryApi, '/rights/history/<string:right_id>',
+                       strict_slashes=False)
 right_api.add_resource(RightTransferApi, '/rights/transfer',
                        strict_slashes=False)
