@@ -14,8 +14,8 @@ services:
       - .env
     environment:
       API_HOST: api
-      BDB_NODE_HOST: "${BDB_NODE_HOST}"
-      BDB_NODE_PORT: "${BDB_NODE_PORT}"
+      BDB_NODE_HOST: bigchaindb
+      BDB_NODE_PORT: 9984
     ports:
       - "${API_PORT}:3000"
     command: python web/server.py
