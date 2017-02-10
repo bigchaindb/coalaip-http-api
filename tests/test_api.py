@@ -172,8 +172,6 @@ def test_create_right_missing_argument_in_body(client, alice):
 
 
 def test_transfer_right(client, alice, bob, carly, created_derived_right):
-    from time import sleep
-
     payload = {
         'rightId': created_derived_right['@id'],
         'rightsAssignment': {
@@ -201,10 +199,10 @@ def test_transfer_right(client, alice, bob, carly, created_derived_right):
     assert resp.status_code == 200
     assert resp.json == expected
 
-    # Test re-transfer, after waiting for the first transfer to become valid
-    sleep(3)
+
+def test_retransferred_right(client, bob, carly, transferred_derived_right):
     retransfer_payload = {
-        'rightId': created_derived_right['@id'],
+        'rightId': transferred_derived_right['@id'],
         'rightsAssignment': {
             'action': 'reloan',
         },
