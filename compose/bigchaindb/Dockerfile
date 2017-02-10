@@ -5,4 +5,4 @@ WORKDIR /usr/src/app
 RUN pip install --upgrade pip
 
 RUN pip install bigchaindb
-RUN bigchaindb -y configure
+RUN bigchaindb -y configure rethinkdb
