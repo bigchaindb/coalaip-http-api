@@ -3,7 +3,7 @@ from flask_restful import reqparse, Resource, Api
 
 from coalaip import CoalaIp, ModelDataError, entities
 from coalaip_bigchaindb.plugin import Plugin
-from web.models import right_model, user_model
+from web.models import right_model, public_user_model, user_model
 from web.utils import get_bigchaindb_api_url
 
 
@@ -49,7 +49,7 @@ class RightTransferApi(Resource):
                             location='json')
         parser.add_argument('currentHolder', type=user_model, required=True,
                             location='json')
-        parser.add_argument('to', type=user_model, required=True,
+        parser.add_argument('to', type=public_user_model, required=True,
                             location='json')
         parser.add_argument('rightsAssignment', type=dict, location='json')
         args = parser.parse_args()
