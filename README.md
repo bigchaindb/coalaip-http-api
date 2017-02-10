@@ -164,8 +164,7 @@ specific copyright holder's name, the copyright holder's `verifyingKey` and
 `signingKey` must be provided here.
 
 Note that the attributes shown for `manifestation` and `work` can be much more
-diverse; for this, see the COALA IP models definition (not yet publicly
-available yet).
+diverse; for this, see their [COALA IP models definition](https://github.com/COALAIP/specs/tree/master/data-structure#rrm-creation).
 
 ```
 POST /api/v1/manifestations/
@@ -262,8 +261,8 @@ Copyright that allows for the new Right's creation. Doing so allows the initial
 link between the source rightsholder and resulting rightsholder to be kept as
 part of the new Right's chain of provenance.
 
-Note that the attributes for the `right` may be much more diverse; see the COALA
-IP models definition (not yet publicly available yet).
+Note that the attributes for the `right` may be much more diverse; see its [COALA
+IP models definition](https://github.com/COALAIP/specs/tree/master/data-structure#rrm-right).
 
 Also see transferring a Right on how to transfer a registered Right to new
 holders.
