@@ -193,7 +193,7 @@ RETURNS:
 {
     "work": {
         "@id": "<Relative URI with the ID of the entity on BigchainDB>",
-        "@type": "CreativeWork",
+        "@type": "AbstractWork",
         "name": "The Lord of the Rings Trilogy",
         "author": "J. R. R. Tolkien"
     },
@@ -203,8 +203,7 @@ RETURNS:
         "name": "The Fellowship of the Ring",
         "manifestationOfWork": "<URI pointing to the Work's transaction ../<txid>",
         "datePublished": "29-07-1954",
-        "url": "<URI pointing to a media blob>",
-        "isManifestation": true
+        "url": "<URI pointing to a media blob>"
     },
     "copyright": {
         "@id": "<Relative URI with the ID of the entity on BigchainDB>",
@@ -289,7 +288,7 @@ RETURNS:
     "right": {
         "@id": "<Relative URI with the ID of the entity on BigchainDB>",
         "@type": "Right",
-        "allowedBy": "<sourceRightId>",
+        "source": "<sourceRightId>",
         "license": "<Legal license text or URI pointing to a license document>",
     }
 }

@@ -26,7 +26,7 @@ class RightApi(Resource):
 
         source_right_id = args['sourceRightId']
         right = args['right']
-        right['allowedBy'] = source_right_id
+        right['source'] = source_right_id
 
         current_holder = args['currentHolder']
         current_holder['public_key'] = current_holder.pop('publicKey')
