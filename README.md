@@ -253,6 +253,10 @@ To check if your POST was successful, try validating by doing the following:
 
 or
 
+1. Try to [request for the entity with a GET request](#requesting-submitted-entities)
+
+or
+
 1. Open your browser and go to `http://localhost:9984/api/v1` (your locally
    running BigchainDB instance - if using the default Docker settings, use port
    `32768` instead).
@@ -364,6 +368,17 @@ conform to the [user model](#create-users).
 To check if your POST was successful, follow the steps in [registering a
 manifestation](#was-my-post-to-manifestations-successful) and use the returned
 Right's data instead.
+
+
+### Requesting Submitted Entities
+
+You can retrieve any submitted entities via a GET to one of the following
+endpoints with the entity's ID (usually the `@id` stripped of any relative URL
+artifacts):
+
+* `/manifestations/<manifestation_id>`: Manifestations
+* `/works/<work_id>`: Works
+* `/rights/<right_id>`: Copyrights and Rights
 
 
 ### Querying the ownership history of a Right
