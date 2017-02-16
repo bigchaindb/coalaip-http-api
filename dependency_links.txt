@@ -1,0 +1,4 @@
+--process-dependency-links
+
+git+https://github.com/bigchaindb/pycoalaip.git@check-rights-holder-consistent#egg=coalaip
+git+https://github.com/bigchaindb/pycoalaip-bigchaindb.git@add-is-same-user#egg=coalaip-bigchaindb

@@ -29,8 +29,8 @@ class ManifestationApi(Resource):
 
         copyright_holder = args['copyrightHolder']
         copyright_holder = {
-            'verifying_key': copyright_holder.pop('verifyingKey'),
-            'signing_key': copyright_holder.pop('signingKey')
+            'public_key': copyright_holder.pop('publicKey'),
+            'private_key': copyright_holder.pop('privateKey')
         }
 
         copyright_, manifestation, work = coalaip.register_manifestation(

@@ -6,18 +6,18 @@ from flask import url_for
 def test_create_user(client):
     resp = client.post(url_for('user_views.userapi'))
     assert resp.status_code == 200
-    assert resp.json['verifyingKey']
-    assert resp.json['signingKey']
+    assert resp.json['publicKey']
+    assert resp.json['privateKey']
 
 
-def test_create_manifestation(client, user):
+def test_create_manifestation(client, alice):
     payload = {
         'manifestation': {
             'name': 'The Fellowship of the Ring',
             'datePublished': '29-07-1954',
             'url': 'http://localhost/lordoftherings.txt',
         },
-        'copyrightHolder': user,
+        'copyrightHolder': alice,
         'work': {
             'name': 'The Lord of the Rings Triology',
             'author': 'J. R. R. Tolkien',
@@ -27,7 +27,7 @@ def test_create_manifestation(client, user):
     expected = {
         'work': {
             '@context': ['<coalaip placeholder>', 'http://schema.org/'],
-            '@type': 'CreativeWork',
+            '@type': 'AbstractWork',
             'name': 'The Lord of the Rings Triology',
             'author': 'J. R. R. Tolkien',
         },
@@ -37,7 +37,6 @@ def test_create_manifestation(client, user):
             'name': 'The Fellowship of the Ring',
             'datePublished': '29-07-1954',
             'url': 'http://localhost/lordoftherings.txt',
-            'isManifestation': True,
         },
         'copyright': {
             '@context': ['<coalaip placeholder>', 'http://schema.org/'],
@@ -71,13 +70,13 @@ def test_create_manifestation(client, user):
     assert resp.status_code == 200
 
 
-def test_create_manifestation_missing_single_attribute(client, user):
+def test_create_manifestation_missing_single_attribute(client, alice):
     payload = {
         'manifestation': {
             'name': 'The Fellowship of the Ring',
             'url': 'http://localhost/lordoftherings.txt',
         },
-        'copyrightHolder': user,
+        'copyrightHolder': alice,
         'work': {
             'name': 'The Lord of the Rings Triology',
             'author': 'J. R. R. Tolkien',
@@ -109,22 +108,25 @@ def test_create_manifestation_missing_argument_in_body(client):
         'Missing required parameter in the JSON body'
 
 
-def test_create_right(client, user):
+def test_create_right(client, alice, created_manifestation_resp):
+    copyright_id = created_manifestation_resp['copyright']['@id']
+    copyright_id = copyright_id.split('../rights/')[1]
+
     payload = {
-        'currentHolder': user,
+        'currentHolder': alice,
         'right': {
             'license': 'http://www.ascribe.io/terms',
         },
-        'sourceRightId': 'mockId',
+        'sourceRightId': copyright_id,
     }
 
     expected = {
         'right': {
             '@context': ['<coalaip placeholder>', 'http://schema.org/'],
             '@type': 'Right',
-            'allowedBy': payload['sourceRightId'],
+            'source': payload['sourceRightId'],
             'license': 'http://www.ascribe.io/terms',
-        }
+        },
     }
 
     resp = client.post(url_for('right_views.rightapi'),
@@ -138,9 +140,9 @@ def test_create_right(client, user):
     assert resp.status_code == 200
 
 
-def test_create_right_missing_single_attribute(client, user):
+def test_create_right_missing_single_attribute(client, alice):
     payload = {
-        'currentHolder': user,
+        'currentHolder': alice,
         'right': {
             'notALicense': 'this is not a license',
         },
@@ -154,9 +156,9 @@ def test_create_right_missing_single_attribute(client, user):
         "'`license` must be provided'"
 
 
-def test_create_right_missing_argument_in_body(client, user):
+def test_create_right_missing_argument_in_body(client, alice):
     payload = {
-        'currentHolder': user,
+        'currentHolder': alice,
         'right': {
             'license': 'http://www.ascribe.io/terms',
         },
@@ -167,3 +169,64 @@ def test_create_right_missing_argument_in_body(client, user):
     assert resp.status_code == 400
     assert resp.json['message']['sourceRightId'] == \
         'Missing required parameter in the JSON body'
+
+
+def test_transfer_right(client, alice, bob, carly,
+                        created_derived_right):
+    from time import sleep
+
+    payload = {
+        'rightId': created_derived_right['@id'],
+        'rightsAssignment': {
+            'action': 'loan',
+        },
+        'currentHolder': alice,
+        'to': {
+            'publicKey': bob['publicKey'],
+            'privateKey': None,
+        }
+    }
+
+    expected = {
+        'rightsAssignment': {
+            '@context': ['<coalaip placeholder>', 'http://schema.org/'],
+            '@type': 'RightsTransferAction',
+            '@id': '',
+            'action': 'loan',
+        },
+    }
+
+    resp = client.post(url_for('right_views.righttransferapi'),
+                       data=json.dumps(payload),
+                       headers={'Content-Type': 'application/json'})
+    assert resp.status_code == 200
+    assert resp.json == expected
+
+    # Test re-transfer, after waiting for the first transfer to become valid
+    sleep(3)
+    retransfer_payload = {
+        'rightId': created_derived_right['@id'],
+        'rightsAssignment': {
+            'action': 'reloan',
+        },
+        'currentHolder': bob,
+        'to': {
+            'publicKey': carly['publicKey'],
+            'privateKey': None,
+        }
+    }
+
+    retransfer_expected = {
+        'rightsAssignment': {
+            '@context': ['<coalaip placeholder>', 'http://schema.org/'],
+            '@type': 'RightsTransferAction',
+            '@id': '',
+            'action': 'reloan',
+        },
+    }
+
+    resp = client.post(url_for('right_views.righttransferapi'),
+                       data=json.dumps(retransfer_payload),
+                       headers={'Content-Type': 'application/json'})
+    assert resp.status_code == 200
+    assert resp.json == retransfer_expected

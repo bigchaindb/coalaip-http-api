@@ -140,7 +140,7 @@ The API server can be configured with a number of environment variables [see
 ### Create Users
 
 This call will not store any data on the running instance of BigchainDB.
-It simply generates a verifying and signing key-pair that can be used in a
+It simply generates a public/private key-pair that can be used in a
 POST-manifestation call.
 
 ```
@@ -151,8 +151,8 @@ PAYLOAD: None
 
 RETURNS:
 {
-    "verifyingKey": "<base58 string>",
-    "signingKey": "<base58 string>",
+    "publicKey": "<base58 string>",
+    "privateKey": "<base58 string>",
 }
 ```
 
@@ -160,8 +160,8 @@ RETURNS:
 ### Register a Manifestation
 
 In order to register the manifestation on BigchainDB as transactions on a
-specific copyright holder's name, the copyright holder's `verifyingKey` and
-`signingKey` must be provided here.
+specific copyright holder's name, the copyright holder's `publicKey` and
+`privateKey` must be provided here.
 
 Note that the attributes shown for `manifestation` and `work` can be much more
 diverse; for this, see their [COALA IP models definition](https://github.com/COALAIP/specs/tree/master/data-structure#rrm-creation).
@@ -178,8 +178,8 @@ PAYLOAD:
         "url": "<URI pointing to a media blob>"
     },
     "copyrightHolder": {
-        "verifyingKey": "<base58 string>",
-        "signingKey": "<base58 string>"
+        "publicKey": "<base58 string>",
+        "privateKey": "<base58 string>"
     },
     "work": {
         "name": "The Lord of the Rings Triology",
@@ -192,7 +192,7 @@ RETURNS:
 {
     "work": {
         "@id": "<Relative URI with the ID of the entity on BigchainDB>",
-        "@type": "CreativeWork",
+        "@type": "AbstractWork",
         "name": "The Lord of the Rings Trilogy",
         "author": "J. R. R. Tolkien"
     },
@@ -202,8 +202,7 @@ RETURNS:
         "name": "The Fellowship of the Ring",
         "manifestationOfWork": "<URI pointing to the Work's transaction ../<txid>",
         "datePublished": "29-07-1954",
-        "url": "<URI pointing to a media blob>",
-        "isManifestation": true
+        "url": "<URI pointing to a media blob>"
     },
     "copyright": {
         "@id": "<Relative URI with the ID of the entity on BigchainDB>",
@@ -264,8 +263,8 @@ part of the new Right's chain of provenance.
 Note that the attributes for the `right` may be much more diverse; see its [COALA
 IP models definition](https://github.com/COALAIP/specs/tree/master/data-structure#rrm-right).
 
-Also see transferring a Right on how to transfer a registered Right to new
-holders.
+Also see [transferring a Right](#transfer-a-right) on how to transfer a
+registered Right to new holders.
 
 ```
 POST /api/v1/rights/
@@ -277,10 +276,10 @@ PAYLOAD:
         "license": "<Legal license text or URI pointing to a license document>"
     },
     "currentHolder": {
-        "verifyingKey": "<base58 string>",
-        "signingKey": "<base58 string>"
+        "publicKey": "<base58 string>",
+        "privateKey": "<base58 string>"
     },
-    "sourceRightId": "<ID of an existing Right that allows for the creation of this new Right>"
+    "sourceRightId": "<ID of an existing Right that allows for the creation of this new Right; must be held by the user specified in `currentHolder`>"
 }
 
 RETURNS:
@@ -288,11 +287,56 @@ RETURNS:
     "right": {
         "@id": "<Relative URI with the ID of the entity on BigchainDB>",
         "@type": "Right",
-        "allowedBy": <The sourceRightId>,
+        "source": "<sourceRightId>",
         "license": "<Legal license text or URI pointing to a license document>",
     }
 }
 ```
+
+To check if your POST was successful, follow the steps in [registering a
+manifestation](#was-my-post-to-manifestations-successful) and use the returned
+Right's data instead.
+
+
+### Transfer a Right
+
+You may only transfer a Right that you are currently holding. RightsAssignment
+entities are automatically created for each transfer and may include additional,
+arbitrary attributes if a `rightsAssignment` dict is given in the payload.
+
+```
+POST /api/v1/rights/transfer
+HEADERS {"Content-Type": "application/json"}
+
+PAYLOAD:
+{
+    "rightId": "<ID of an existing Right to transfer; must be held by the user specified in `currentHolder`>",
+    "rightsAssignment": {
+        ...
+    },
+    "currentHolder": {
+        "publicKey": "<base58 string>",
+        "privateKey": "<base58 string>"
+    },
+    "to": {
+        "publicKey": "<base58 string>",
+        "privateKey": null
+    }
+}
+
+RETURNS:
+{
+    "rightsAssignment": {
+        "@id": "<currently empty>",
+        "@type": "RightsTransferAction",
+        ... (provided `rightsAssignment`)
+    }
+}
+```
+
+Note that the `to` field in the payload may avoid specifying the new holder's
+private details (i.e. `signingKey`), but should still provide the keys needed to
+conform to the [user model](#create-users).
 
 To check if your POST was successful, follow the steps in [registering a
 manifestation](#was-my-post-to-manifestations-successful) and use the returned

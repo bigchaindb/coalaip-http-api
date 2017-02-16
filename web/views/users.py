@@ -17,13 +17,13 @@ class UserApi(Resource):
         """API endpoint to create a new keypair for a user
 
         Return:
-            A dict containing the verifying_key and signing_key.
+            A dict containing the publicKey and privateKey.
         """
         # TODO FOR COALA IP: Return CamelCase key names
         user = coalaip.generate_user()
         # TODO: We might want to have a generic function for this at one point.
-        user['verifyingKey'] = user.pop('verifying_key')
-        user['signingKey'] = user.pop('signing_key')
+        user['publicKey'] = user.pop('public_key')
+        user['privateKey'] = user.pop('private_key')
         return user
 
 

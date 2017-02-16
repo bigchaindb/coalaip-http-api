@@ -5,7 +5,6 @@ import os
 BigchainDBConfiguration = namedtuple('BigchainDBConfiguration', [
     'hostname',
     'port',
-    'api_path'
 ])
 
 
@@ -19,20 +18,14 @@ BDB_PORT = os.environ.get('BDB_NODE_PORT', None)
 if not BDB_PORT:
     BDB_PORT = '9984'
 
-BDB_API_PATH = os.environ.get('BDB_NODE_API_PATH', None)
-if not BDB_API_PATH:
-    BDB_API_PATH = 'api/v1'
-
 
 def get_bigchaindb_configuration():
-    return BigchainDBConfiguration(BDB_HOST, BDB_PORT, BDB_API_PATH)
+    return BigchainDBConfiguration(BDB_HOST, BDB_PORT)
 
 
 def get_bigchaindb_api_url():
-    hostname, port, api_path = get_bigchaindb_configuration()
-    return 'http://{hostname}:{port}/{api_path}'.format(hostname=hostname,
-                                                        port=port,
-                                                        api_path=api_path)
+    hostname, port = get_bigchaindb_configuration()
+    return 'http://{hostname}:{port}'.format(hostname=hostname, port=port)
 
 
 def parse_model(required_fields):
@@ -42,7 +35,7 @@ def parse_model(required_fields):
                 value = inputs[field]
             except KeyError:
                 raise KeyError('`{}` must be provided'.format(field))
-            if bool(value) is not True:
+            if not value:
                 raise ValueError("`{}`'s value must be defined".format(field))
         return inputs
     return _parse_model
