@@ -14,7 +14,7 @@ interface (runnable in Docker) of the functionalities provided in
 [pycoalaip](https://github.com/bigchaindb/pycoalaip).
 
 
-## Whats the status of this?
+## What's the status of this?
 
 Super-pre-alpha. At the moment all you can do is hit against two endpoints that
 are being exposed. Minimal error paths are provided.
@@ -132,6 +132,22 @@ the `localhost` part of the above URLs.
 
 The API server can be configured with a number of environment variables [see
 .env_template](./.env_template).
+
+
+## Quick Guide
+
+Let's assume you have an artwork you'd like to loan to someone else. These are
+the steps you'll need to follow in order to register the work and any
+transactions relating to the work via COALA IP.
+
+1. First, [create some users](#create-users) for both yourself and those
+   "someone elses"
+1. [Register your artwork as a Manifestation](#reigster-a-manifestation)
+1. [Derive a special "usage" Right](#register-a-right-allowed-by-another-right-or-copyright)
+   from the Copyright that resulted from registering your artwork
+1. Finally, [transfer that special "usage" Right](#transfer-a-right) to someone
+   else, optionally including a contract and other information as part of the
+   transfer.
 
 
 ## REST API
@@ -299,6 +315,12 @@ Right's data instead.
 
 
 ### Transfer a Right
+
+A contract between a rightsholder and a licensee can be recorded through the
+transferring of a Right, via an accompanying RightsAssignment entity. The
+transfer transaction recorded on BigchainDB links to that contract (via the
+RightsAssignment) and provides a record of the parties, the date of the
+transaction, and the contract that applies.
 
 You may only transfer a Right that you are currently holding. RightsAssignment
 entities are automatically created for each transfer and may include additional,
