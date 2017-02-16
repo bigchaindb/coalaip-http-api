@@ -26,16 +26,44 @@ def carly(client):
 
 
 @pytest.fixture
-def created_derived_right_with_mock_source(client, alice):
+def created_manifestation_resp(client, alice):
+    import json
+    from time import sleep
+    payload = {
+        'manifestation': {
+            'name': 'The Fellowship of the Ring',
+            'datePublished': '29-07-1954',
+            'url': 'http://localhost/lordoftherings.txt',
+        },
+        'copyrightHolder': alice,
+        'work': {
+            'name': 'The Lord of the Rings Triology',
+            'author': 'J. R. R. Tolkien',
+        },
+    }
+
+    resp = client.post(url_for('manifestation_views.manifestationapi'),
+                       data=json.dumps(payload),
+                       headers={'Content-Type': 'application/json'})
+
+    # Sleep for a bit to let the transaction become valid
+    sleep(3)
+    return resp.json
+
+
+@pytest.fixture
+def created_derived_right(client, alice, created_manifestation_resp):
     import json
     from time import sleep
 
+    copyright_id = created_manifestation_resp['copyright']['@id']
+    copyright_id = copyright_id.split('../rights/')[1]
     payload = {
         'currentHolder': alice,
         'right': {
             'license': 'http://www.ascribe.io/terms',
         },
-        'sourceRightId': 'mockId',
+        'sourceRightId': copyright_id,
     }
 
     resp = client.post(url_for('right_views.rightapi'),

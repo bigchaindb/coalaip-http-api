@@ -264,8 +264,8 @@ part of the new Right's chain of provenance.
 Note that the attributes for the `right` may be much more diverse; see the COALA
 IP models definition (not yet publicly available yet).
 
-Also see transferring a Right on how to transfer a registered Right to new
-holders.
+Also see [transferring a Right](#transfer-a-right) on how to transfer a
+registered Right to new holders.
 
 ```
 POST /api/v1/rights/

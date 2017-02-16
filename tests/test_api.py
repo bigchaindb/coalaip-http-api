@@ -108,13 +108,16 @@ def test_create_manifestation_missing_argument_in_body(client):
         'Missing required parameter in the JSON body'
 
 
-def test_create_right(client, alice):
+def test_create_right(client, alice, created_manifestation_resp):
+    copyright_id = created_manifestation_resp['copyright']['@id']
+    copyright_id = copyright_id.split('../rights/')[1]
+
     payload = {
         'currentHolder': alice,
         'right': {
             'license': 'http://www.ascribe.io/terms',
         },
-        'sourceRightId': 'mockId',
+        'sourceRightId': copyright_id,
     }
 
     expected = {
@@ -169,11 +172,11 @@ def test_create_right_missing_argument_in_body(client, alice):
 
 
 def test_transfer_right(client, alice, bob, carly,
-                        created_derived_right_with_mock_source):
+                        created_derived_right):
     from time import sleep
 
     payload = {
-        'rightId': created_derived_right_with_mock_source['@id'],
+        'rightId': created_derived_right['@id'],
         'rightsAssignment': {
             'action': 'loan',
         },
@@ -202,7 +205,7 @@ def test_transfer_right(client, alice, bob, carly,
     # Test re-transfer, after waiting for the first transfer to become valid
     sleep(3)
     retransfer_payload = {
-        'rightId': created_derived_right_with_mock_source['@id'],
+        'rightId': created_derived_right['@id'],
         'rightsAssignment': {
             'action': 'reloan',
         },
