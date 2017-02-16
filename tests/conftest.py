@@ -42,7 +42,7 @@ def created_manifestation_resp(client, alice):
         },
     }
 
-    resp = client.post(url_for('manifestation_views.manifestationapi'),
+    resp = client.post(url_for('manifestation_views.manifestationlistapi'),
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
 
@@ -66,7 +66,7 @@ def created_derived_right(client, alice, created_manifestation_resp):
         'sourceRightId': copyright_id,
     }
 
-    resp = client.post(url_for('right_views.rightapi'),
+    resp = client.post(url_for('right_views.rightlistapi'),
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
 

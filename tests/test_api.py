@@ -43,7 +43,7 @@ def test_create_manifestation(client, alice):
             '@type': 'Copyright',
         },
     }
-    resp = client.post(url_for('manifestation_views.manifestationapi'),
+    resp = client.post(url_for('manifestation_views.manifestationlistapi'),
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
     resp_dict = resp.json
@@ -82,7 +82,7 @@ def test_create_manifestation_missing_single_attribute(client, alice):
             'author': 'J. R. R. Tolkien',
         },
     }
-    resp = client.post(url_for('manifestation_views.manifestationapi'),
+    resp = client.post(url_for('manifestation_views.manifestationlistapi'),
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
     # TODO: I really don't know why flask_restful includes the extra '' in the
@@ -100,12 +100,45 @@ def test_create_manifestation_missing_argument_in_body(client):
             'datePublished': '29-07-1954',
         },
     }
-    resp = client.post(url_for('manifestation_views.manifestationapi'),
+    resp = client.post(url_for('manifestation_views.manifestationlistapi'),
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
     assert resp.status_code == 400
     assert resp.json['message']['work'] == \
         'Missing required parameter in the JSON body'
+
+
+def test_get_manifestation(client, alice, created_manifestation_resp):
+    manifestation = created_manifestation_resp['manifestation']
+    resp = client.get(
+        url_for('manifestation_views.manifestationapi',
+                entity_id=manifestation['@id']))
+
+    assert resp.status_code == 200
+
+    resp_manifestation = resp.json
+    # The Manifestation we get back has its @id set to "" as it could be found
+    # at that location
+    resp_manifestation.pop('@id')
+    manifestation.pop('@id')
+
+    assert resp_manifestation == manifestation
+
+
+def test_get_work(client, alice, created_manifestation_resp):
+    work = created_manifestation_resp['work']
+    work_id = work['@id'].split('../works/')[1]
+    resp = client.get(url_for('work_views.workapi', entity_id=work_id))
+
+    assert resp.status_code == 200
+
+    resp_work = resp.json
+    # The Work we get back has its @id set to "" as it could be found
+    # at that location
+    resp_work.pop('@id')
+    work.pop('@id')
+
+    assert resp_work == work
 
 
 def test_create_right(client, alice, created_manifestation_resp):
@@ -129,7 +162,7 @@ def test_create_right(client, alice, created_manifestation_resp):
         },
     }
 
-    resp = client.post(url_for('right_views.rightapi'),
+    resp = client.post(url_for('right_views.rightlistapi'),
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
     resp_dict = resp.json
@@ -148,7 +181,7 @@ def test_create_right_missing_single_attribute(client, alice):
         },
         'sourceRightId': 'mockId',
     }
-    resp = client.post(url_for('right_views.rightapi'),
+    resp = client.post(url_for('right_views.rightlistapi'),
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
     assert resp.status_code == 400
@@ -163,12 +196,43 @@ def test_create_right_missing_argument_in_body(client, alice):
             'license': 'http://www.ascribe.io/terms',
         },
     }
-    resp = client.post(url_for('right_views.rightapi'),
+    resp = client.post(url_for('right_views.rightlistapi'),
                        data=json.dumps(payload),
                        headers={'Content-Type': 'application/json'})
     assert resp.status_code == 400
     assert resp.json['message']['sourceRightId'] == \
         'Missing required parameter in the JSON body'
+
+
+def test_get_right_from_copyright(client, alice, created_manifestation_resp):
+    copyright = created_manifestation_resp['copyright']
+    copyright_id = copyright['@id'].split('../rights/')[1]
+    resp = client.get(url_for('right_views.rightapi', entity_id=copyright_id))
+
+    assert resp.status_code == 200
+
+    resp_copyright = resp.json
+    # The Copyright we get back has its @id set to "" as it could be found
+    # at that location
+    resp_copyright.pop('@id')
+    copyright.pop('@id')
+
+    assert resp_copyright == copyright
+
+
+def test_get_right_from_right(client, alice, created_derived_right):
+    resp = client.get(url_for('right_views.rightapi',
+                              entity_id=created_derived_right['@id']))
+
+    assert resp.status_code == 200
+
+    resp_right = resp.json
+    # The Right we get back has its @id set to "" as it could be found
+    # at that location
+    resp_right.pop('@id')
+    created_derived_right.pop('@id')
+
+    assert resp_right == created_derived_right
 
 
 def test_transfer_right(client, alice, bob, carly, created_derived_right):
