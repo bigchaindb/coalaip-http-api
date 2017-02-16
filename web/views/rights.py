@@ -13,7 +13,28 @@ right_views = Blueprint('right_views', __name__)
 right_api = Api(right_views)
 
 
+def load_right(entity_id):
+    # We can't be sure of the type of Right that's given by using just the
+    # id, so let's assume it's a normal Right first before trying to make a
+    # Copyright
+    try:
+        right = entities.Right.from_persist_id(entity_id,
+                                               plugin=coalaip.plugin,
+                                               force_load=True)
+    except ModelDataError:
+        right = entities.Copyright.from_persist_id(entity_id,
+                                                   plugin=coalaip.plugin,
+                                                   force_load=True)
+    return right
+
+
 class RightApi(Resource):
+    def get(self, entity_id):
+        right = load_right(entity_id)
+        return right.to_jsonld()
+
+
+class RightListApi(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('right', type=right_model, required=True,
@@ -78,18 +99,7 @@ class RightTransferApi(Resource):
             user['public_key'] = user.pop('publicKey')
             user['private_key'] = user.pop('privateKey')
 
-        # We can't be sure of the type of Right that's given by using just the
-        # id, so let's assume it's a normal Right first before trying to make a
-        # Copyright
-        try:
-            right = entities.Right.from_persist_id(right_id,
-                                                   plugin=coalaip.plugin,
-                                                   force_load=True)
-        except ModelDataError:
-            right = entities.Copyright.from_persist_id(right_id,
-                                                       plugin=coalaip.plugin,
-                                                       force_load=True)
-
+        right = load_right(right_id)
         res = coalaip.transfer_right(right=right,
                                      rights_assignment_data=rights_assignment,
                                      current_holder=current_holder,
@@ -100,8 +110,9 @@ class RightTransferApi(Resource):
         return res
 
 
-right_api.add_resource(RightApi, '/rights', strict_slashes=False)
+right_api.add_resource(RightApi, '/rights/<entity_id>', strict_slashes=False)
 right_api.add_resource(RightHistoryApi, '/rights/history/<string:right_id>',
                        strict_slashes=False)
+right_api.add_resource(RightListApi, '/rights', strict_slashes=False)
 right_api.add_resource(RightTransferApi, '/rights/transfer',
                        strict_slashes=False)

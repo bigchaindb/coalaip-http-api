@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import reqparse, Resource, Api
 
-from coalaip import CoalaIp
+from coalaip import CoalaIp, entities
 from coalaip_bigchaindb.plugin import Plugin
 from web.models import manifestation_model, user_model, work_model
 from web.utils import get_bigchaindb_api_url
@@ -14,6 +14,13 @@ manifestation_api = Api(manifestation_views)
 
 
 class ManifestationApi(Resource):
+    def get(self, entity_id):
+        manifestation = entities.Manifestation.from_persist_id(
+            entity_id, plugin=coalaip.plugin, force_load=True)
+        return manifestation.to_jsonld()
+
+
+class ManifestationListApi(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('manifestation', type=manifestation_model,
@@ -51,5 +58,7 @@ class ManifestationApi(Resource):
         return res
 
 
-manifestation_api.add_resource(ManifestationApi, '/manifestations',
+manifestation_api.add_resource(ManifestationApi, '/manifestations/<entity_id>',
+                               strict_slashes=False)
+manifestation_api.add_resource(ManifestationListApi, '/manifestations',
                                strict_slashes=False)
