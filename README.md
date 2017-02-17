@@ -263,8 +263,8 @@ part of the new Right's chain of provenance.
 Note that the attributes for the `right` may be much more diverse; see its [COALA
 IP models definition](https://github.com/COALAIP/specs/tree/master/data-structure#rrm-right).
 
-Also see transferring a Right on how to transfer a registered Right to new
-holders.
+Also see [transferring a Right](#transfer-a-right) on how to transfer a
+registered Right to new holders.
 
 ```
 POST /api/v1/rights/
