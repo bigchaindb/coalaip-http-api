@@ -108,13 +108,16 @@ def test_create_manifestation_missing_argument_in_body(client):
         'Missing required parameter in the JSON body'
 
 
-def test_create_right(client, user):
+def test_create_right(client, user, created_manifestation_resp):
+    copyright_id = created_manifestation_resp['copyright']['@id']
+    copyright_id = copyright_id.split('../rights/')[1]
+
     payload = {
         'currentHolder': user,
         'right': {
             'license': 'http://www.ascribe.io/terms',
         },
-        'sourceRightId': 'mockId',
+        'sourceRightId': copyright_id,
     }
 
     expected = {
