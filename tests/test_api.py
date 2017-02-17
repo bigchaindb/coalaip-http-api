@@ -27,7 +27,7 @@ def test_create_manifestation(client, user):
     expected = {
         'work': {
             '@context': ['<coalaip placeholder>', 'http://schema.org/'],
-            '@type': 'CreativeWork',
+            '@type': 'AbstractWork',
             'name': 'The Lord of the Rings Triology',
             'author': 'J. R. R. Tolkien',
         },
@@ -37,7 +37,6 @@ def test_create_manifestation(client, user):
             'name': 'The Fellowship of the Ring',
             'datePublished': '29-07-1954',
             'url': 'http://localhost/lordoftherings.txt',
-            'isManifestation': True,
         },
         'copyright': {
             '@context': ['<coalaip placeholder>', 'http://schema.org/'],
@@ -122,7 +121,7 @@ def test_create_right(client, user):
         'right': {
             '@context': ['<coalaip placeholder>', 'http://schema.org/'],
             '@type': 'Right',
-            'allowedBy': payload['sourceRightId'],
+            'source': payload['sourceRightId'],
             'license': 'http://www.ascribe.io/terms',
         }
     }
