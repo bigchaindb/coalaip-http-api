@@ -14,7 +14,7 @@ from flask_cors import CORS
 
 from web.views.users import user_views
 from web.views.recordings import recordings_views
-from web.views.works import work_views
+from web.views.compositions import composition_views
 
 
 class StandaloneApplication(gunicorn.app.base.BaseApplication):
@@ -66,7 +66,7 @@ def create_app(settings):
 
     app.register_blueprint(user_views, url_prefix='/api/v1')
     app.register_blueprint(recording_views, url_prefix='/api/v1')
-    app.register_blueprint(work_views, url_prefix='/api/v1')
+    app.register_blueprint(composition_views, url_prefix='/api/v1')
     return app
 
 
