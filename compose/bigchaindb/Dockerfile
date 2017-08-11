@@ -1,8 +1,12 @@
-FROM python:3.5
+FROM python:3.6.2rc1
 
+RUN apt-get update && apt-get install -y vim
+
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-RUN pip install --upgrade pip
-
+RUN pip install --upgrade pip ipdb ipython
 RUN pip install bigchaindb
-RUN bigchaindb -y configure rethinkdb
+
+COPY . /usr/src/app/
+

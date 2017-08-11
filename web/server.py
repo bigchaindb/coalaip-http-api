@@ -12,6 +12,7 @@ import gunicorn.app.base
 from flask import Flask
 from flask_cors import CORS
 
+from web.views.info import info_views
 from web.views.users import user_views
 from web.views.manifestations import manifestation_views
 from web.views.rights import right_views
@@ -65,6 +66,7 @@ def create_app(settings):
 
     app.debug = settings.get('debug', False)
 
+    app.register_blueprint(info_views, url_prefix='/api/v1')
     app.register_blueprint(user_views, url_prefix='/api/v1')
     app.register_blueprint(manifestation_views, url_prefix='/api/v1')
     app.register_blueprint(right_views, url_prefix='/api/v1')

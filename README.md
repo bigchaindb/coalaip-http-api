@@ -16,7 +16,7 @@ interface (runnable in Docker) of the functionalities provided in
 
 ## What's the status of this?
 
-Super-pre-alpha. At the moment all you can do is hit against two endpoints that
+Alpha. At the moment all you can do is hit against a few endpoints that
 are being exposed. Minimal error paths are provided.
 This package and [pycoalaip](https://github.com/bigchaindb/pycoalaip)
 will probably mature rather quickly as we're actively developing them
@@ -56,7 +56,7 @@ Yes, [curl](https://curl.haxx.se/).
 ### For development on Linux
 
 1. You'll have to [install, configure and run BigchainDB as well as
-RethinkDB](https://bigchaindb.readthedocs.io/en/latest/quickstart.html).
+MongoDB](https://docs.bigchaindb.com/projects/server/en/latest/quickstart.html).
 
 2. Install and run this library using the following commands:
 
@@ -80,23 +80,23 @@ You'll need to have at least the base [Docker](https://docs.docker.com/engine/in
 and [Docker Compose](https://docs.docker.com/compose/install/) installed, but
 on some platforms (i.e. OSX and Windows), [Docker Machine](https://docs.docker.com/machine/install-machine/).
 will also be necessary. As a quick primer, it may be interesting to go through
-the guide to [run BigchainDB via Docker](http://bigchaindb-examples.readthedocs.io/en/latest/install.html#the-docker-way),
+the guide to [run BigchainDB via Docker](https://docs.bigchaindb.com/projects/server/en/latest/appendices/run-with-docker.html),
 but we've already set up everything for you in this repo.
 
 If you already have Docker installed, just make sure you have a recent version:
 
 ```bash
 $ docker --version
-Docker version 1.11.1, build 5604cbe
+Docker version 1.12.1, build 23cf638
 
 $ docker-compose --version
-docker-compose version 1.7.0, build 0d7bf73
+docker-compose version 1.15.0, build e12f3b9
 ```
 
 #### Running with Docker
 
 Using the provided [docker-compose.yml](./docker-compose.yml), you can install
-and start RethinkDB, BigchainDB, and the COALA IP HTTP server with just a
+and start MongoDB, BigchainDB, and the COALA IP HTTP server with just a
 few commands.
 
 First, copy the default environment settings and build the Docker containers:
@@ -111,7 +111,7 @@ And then start the services:
 ```bash
 # In one terminal
 # Note that BigchainDB must be started after RethinkDB has begun accepting connections (may take a few seconds)
-$ docker-compose up -d rethinkdb
+$ docker-compose up -d mdb
 $ docker-compose up bigchaindb
 
 # In another terminal
@@ -120,8 +120,7 @@ $ docker-compose up api
 
 By default, the COALA IP HTTP server will now be available through
 `http://localhost:3000/api/v1/`, along with the BigchainDB API
-(`http://localhost:32768/api/v1/`) and the RethinkDB admin panel
-(`http://localhost:58585`).
+(`http://localhost:32768/api/v1/`).
 
 **Note**: If you are running Docker through Docker Machine, the services will
 only be available through the hostname of your Docker Machine instance. Use
@@ -151,7 +150,6 @@ transactions relating to the work via COALA IP.
 
 
 ## REST API
-
 
 ### Create Users
 
@@ -243,6 +241,7 @@ the persisted IDs of these entities.
 
 Note that in the future, we also plan to replace the JSON-LD linking structure
 with [IPLD](https://github.com/ipld/specs).
+
 
 #### Was my POST to `/manifestations/` successful?
 
