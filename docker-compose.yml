@@ -19,20 +19,23 @@ services:
     ports:
       - "${API_PORT}:3000"
     command: python web/server.py
-  rethinkdb:
-    image: rethinkdb
-    env_file:
-      - .env
+  mdb:
+    image: mongo:3.4.3
     ports:
-      - "${RETHINKDB_ADMIN_PORT}:8080"
-      - "28015"
+      - "27017"
+    command: mongod --replSet=bigchain-rs
   bigchaindb:
     build: ./compose/bigchaindb
     env_file:
       - .env
     environment:
-      BIGCHAINDB_DATABASE_HOST: rethinkdb
+      BIGCHAINDB_DATABASE_BACKEND: mongodb
+      BIGCHAINDB_DATABASE_HOST: mdb
+      BIGCHAINDB_DATABASE_PORT: 27017
       BIGCHAINDB_SERVER_BIND: 0.0.0.0:9984
+      BIGCHAINDB_WSSERVER_HOST: 0.0.0.0
+      BIGCHAINDB_KEYPAIR_PUBLIC: GW1nrdZm4mbVC8ePeiGWz6DqHexqewqy5teURVHi3RG4
+      BIGCHAINDB_KEYPAIR_PRIVATE: 2kQgBtQnHoauw8QchKM7xYvEBW1QDoHzhBsCL9Vi1AzB
     ports:
-      - "${BIGCHAINDB_API_PORT}:9984"
+      - "9984"
     command: bigchaindb start
